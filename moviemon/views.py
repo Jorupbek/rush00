@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.views.generic import TemplateView, View
+from django.views.generic import TemplateView
 
 from moviemon.instance import Moviemon
 import os
@@ -128,9 +128,9 @@ def battle(request, id):
     chance = 0
 
     try:
-        forceJoueur = game.get_strength()
+        strange = game.get_strength()
         forceMonstre = float(moviemonABattre['rating']) * 10
-        chance = 50 - int(forceMonstre) + forceJoueur * 5
+        chance = 50 - int(forceMonstre) + strange * 5
         if chance < 1:
             chance = 1
         if chance > 90:
@@ -143,7 +143,7 @@ def battle(request, id):
             game.movieballs = game.movieballs - 1
             rat = moviemonABattre['rating']
             forceMonstre = float(rat) if rat != 'N/A' else 1 * 10
-            chance = 50 - int(forceMonstre) + forceJoueur * 5
+            chance = 50 - int(forceMonstre) + strange * 5
             randomNumber = random.randint(1, 100)
             moviemonListAvecDetailClean = []
             if chance >= randomNumber or moviemonballTry == 'cheat':
@@ -153,16 +153,16 @@ def battle(request, id):
                         moviemonListAvecDetailClean.append(moviemon)
                 game.movies_detail = moviemonListAvecDetailClean
                 game.save_tmp()
-                message = "Tu as attrapé un moviemon !"
+                message = "You catched moviemon!"
                 moviemonballTry = False
             else:
                 if (game.movieballs > 0):
-                    message = "Retente ta chance !"
+                    message = "Try your luck again!"
                 else:
-                    message = "Tu n'as plus de movieballs"
+                    message = "You don't have movieballs"
             game.save_tmp()
         else:
-            message = "Tu n'as plus de movieballs"
+            message = "You don't have movieballs"
 
     params = {
         'left_href': '', 'up_href': '', 'down_href': '', 'right_href': '',
@@ -171,8 +171,8 @@ def battle(request, id):
         'select_title': '', 'start_title': '',
         'a_href': '/battle/' + id + '?movieball=true',
         'b_href': '/worldmap?id=' + id,
-        'a_title': '', 'b_title': 'Retour au World Map',
-        "message": message, "forceJoueur": forceJoueur,
+        'a_title': '', 'b_title': 'Return to World Map',
+        "message": message, "strange": strange,
         "movieballs": game.movieballs,
         "moviemonABattre": moviemonABattre, "id": id, "chance": chance
     }

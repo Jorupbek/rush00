@@ -1,5 +1,5 @@
 from django.urls import path
-from moviemon.views import HomePageView, worldmap, battle, moviedex, moviedexDetail, \
+from .views import HomePageView, worldmap, battle, moviedex, moviedexDetail, \
     options, options_save_game, options_load_game
 
 urlpatterns = [
