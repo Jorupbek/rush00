@@ -1,4 +1,4 @@
-{% extends "ex00/base.html" %}
+{% extends "base.html" %}
 
 {% block title %}
 Moviemon - World Map
@@ -13,27 +13,43 @@ Moviemon - World Map
 {% block content %}
 
 <div id="console">
-    <div id="ecran">
+    <div id="ecran" style="height: 39vw">
         <div>World Map</div>
         <div id="grid">
             {% for x in grid %}
                 {% for y in x %}
-                    <span class="square">{{y}}</span> 
+                    {% if y == 'O' %}
+                        <img class="mario" src="{% static 'poke_ball.png' %}" alt="mario">
+                    {% else %}
+                        <img class="wall-brick" src="{% static 'wall_brick.jpeg' %}" alt="wall">
+                    {% endif %}
                 {% endfor %}  
                  <br>
             {% endfor %}
 		</div> <!-- grid-->
         <div id="info">
 			<div id="numballs">You have {{numballs}}  movieballs</div>
+                <style>
+                #console {height: 49vw;}
+                #controles {padding-top: 1vh;}
+                </style>
 			{% if found == 1 %}
+                <style>
+                #console {height: 55vw;}
+                #controles {padding-top: 10vh;}
+                </style>
 				<div id="message">You got a movieball!</div>
 			{% elif found == 2 %}
+                <style>
+                #console {height: 60vw;}
+                #controles {padding-top: 20vh;}
+                </style>
 				<div id="message">You found Moviemon {{found_moviemon}}!</div>
                 <div>Press A to try to catch it!</div>
 			{% endif %}
         </div>  <!-- info-->
     </div> <!-- ecran-->
-	{% include "ex00/controles.html" %}
+	{% include "controles.html" %}
 </div> <!-- console-->
 
 {% endblock %}

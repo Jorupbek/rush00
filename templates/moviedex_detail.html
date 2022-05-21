@@ -1,4 +1,4 @@
-{% extends "ex00/base.html" %}
+{% extends "base.html" %}
 
 {% block title %}
 Detail
@@ -10,28 +10,28 @@ Detail
 {% endblock %}
 
 {% block content %}
-<div id="console">
-    <div id="ecran">
+<div id="console" style="height: 63vw">
+    <div id="ecran" style="height: 53vw">
 	  <div id="moviedex_item_detail">
 		<div class="name">{{moviemonDetail.nom}}</div>
 			<br>
 			<img class="moviedex_item_detail" src={{moviemonDetail.poster}} alt="moviemon">
 			<br>
-			Réalisateur : {{moviemonDetail.realisateur}}
+			Director : {{moviemonDetail.realisateur}}
 			<br>
-			Année : {{moviemonDetail.annee}}
+			Year : {{moviemonDetail.annee}}
 			 - 
 			Rating : {{moviemonDetail.rating}}
 			<br>
 			Synopsis : {{moviemonDetail.synopsis}}
 			<br>
-			Acteurs : {{moviemonDetail.acteurs}}
+			Actors : {{moviemonDetail.acteurs}}
       </div> <!-- moviedex_item_detail -->
       <div id="info">
-			<div>B - Back</div>
+			<div>B: Back</div>
       	</div> <!-- info-->
     </div> <!-- ecran-->
-    {% include "ex00/controles.html" %}
+    {% include "controles.html" %}
 </div> <!-- console-->
 
 {% endblock %}

@@ -1,0 +1,164 @@
+body {
+    text-align: center;
+    font-size: 4vw;
+    font-family: fantasy;
+}
+div{
+ padding :0.5vw;
+}
+
+#console {
+    width: 50vw;
+    height: 61vw;
+    border: 5px solid #c4e2f7;
+    padding: 3vw;
+    background-color: #c4e2f7;
+    margin: 5px auto;
+}
+#ecran {
+    height: 51vw;
+    font-size: 3vw;
+	background-color: white;
+}
+#info {
+	 font-size: 2vw;
+}
+
+#controles {
+
+    top: 50vw;
+    padding-top: 1vh;
+    padding-bottom: 0vh;
+    font-size: 3vw;
+    flex-direction: row;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+
+}
+.start_select {
+	border: 1px solid gray;
+    border-radius: 30px;
+    padding: 7px 15px 3px 15px;
+    font-size: 2vw;
+    background-color: gray;
+    color: white !important;
+}
+#grid {
+    font-size: 1vw;
+}
+.square {
+    font-size: 2.5vw;
+    border: 1px solid;
+    padding: 0 10px
+}
+a {
+    color: darkblue;
+    text-decoration: none;
+}
+a:link {
+    color:inherit;
+}
+#game_name {
+    font-size: 8vw;
+}
+#welcome_message {
+	padding-top: 6vw;
+}
+
+#moviedex_item {
+	font-size: 1.5vw;
+}
+#moviedex_item .name {
+	font-size: 2vw;
+	padding: 2vw;
+}
+#moviedex_item div {
+	padding: 2vw;
+}
+#moviedex_item img {
+	height: 12vw;
+	width: 8vw;
+}
+
+#moviedex_item_detail {
+	font-size: 1.5vw;
+}
+#moviedex_item_detail .name {
+	font-size: 2vw;
+	padding-top: 2vw;
+}
+#moviedex_item_detail img {
+	height: 24vw;
+	width: 16vw;
+}
+
+#battle {
+	font-size: 1.5vw;
+}
+.info_battle {
+	 font-size: 1.5vw;
+}
+#affiche{
+	height: 20vw;
+}
+#battle .name {
+	font-size: 2vw;
+	padding: 1vw;
+}
+#battle div {
+	padding: 1vw;
+}
+#battle img {
+	height: 21vw;
+	width: 14vw;
+}
+
+.move-arrows {
+	color: #ffffff !important;
+	font-family: cursive;
+}
+
+.arrows-round {
+	display: flex;
+    background-color: gray;
+    border-radius: 100px;
+    align-items: center;
+    width: 135px;
+	height: 135px;
+    justify-content: center;
+}
+
+.center-up-down {
+	flex-direction: column;
+    display: flex;
+    justify-content: space-between;
+    height: 140px;
+}
+
+.a-but, .b-but {
+    border-radius: 50px;
+    width: 54px;
+    height: 54px;
+    color: white !important;
+}
+.a-but {
+    background-color: #09df23;
+	border: 0.5px solid #09df23;
+}
+
+.b-but {
+    background-color: #f93c3c;
+    border: 1px solid #f93c3c;
+}
+
+.mario {
+    width: 40px;
+    height: 36px;
+}
+
+.wall-brick {
+    width: 36px;
+    height: 36px;
+    padding: 0 2px;
+}

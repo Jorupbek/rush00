@@ -7,7 +7,7 @@ import random
 
 
 class HomePageView(TemplateView):
-    template_name = "ex00/home.html"
+    template_name = "home.html"
 
     def __init__(self):
         movmn = Moviemon()
@@ -116,7 +116,7 @@ def worldmap(request):
         'numballs': movmn.movieballs
     }
 
-    return render(request, "ex00/worldmap.html", context)
+    return render(request, "worldmap.html", context)
 
 
 def battle(request, id):
@@ -174,7 +174,7 @@ def battle(request, id):
         "moviemonABattre": moviemonABattre, "id": id, "chance": chance
     }
 
-    return render(request, "ex00/battle.html", params)
+    return render(request, "battle.html", params)
 
 
 def do_move_moviedex(movmn, move, selected):
@@ -254,7 +254,7 @@ def moviedex(request):
         'a_title': 'Moviemon Details', 'b_title': '',
         'moviedex': moviedex, 'selected': selected
     }
-    return render(request, "ex00/moviedex.html", controls_params)
+    return render(request, "moviedex.html", controls_params)
 
 
 def moviedexDetail(request, id):
@@ -270,7 +270,7 @@ def moviedexDetail(request, id):
         'a_title': '', 'b_title': 'Moviedex',
         "moviemonDetail": moviedex[int(id)]
     }
-    return render(request, "ex00/moviedex_detail.html", controls_params)
+    return render(request, "moviedex_detail.html", controls_params)
 
 
 def options(request):
@@ -285,7 +285,7 @@ def options(request):
         'a_href': '/options/save_game', 'b_href': '/',
         'a_title': 'Save', 'b_title': 'Quit',
     }
-    return render(request, "ex00/options.html", controls_params)
+    return render(request, "options.html", controls_params)
 
 
 def options_load_game(request):
@@ -321,7 +321,7 @@ def options_load_game(request):
             slotc = True
             gameSplit = game.split("_")
             gameSplitC = gameSplit[1]
-    return render(request, "ex00/options_load_game.html",
+    return render(request, "options_load_game.html",
                   {"slota": slota, "slotb": slotb, "slotc": slotc,
                    "slotaNiveau": gameSplitA, "slotbNiveau": gameSplitB,
                    "slotcNiveau": gameSplitC, "b_href": "/", "b_title": "menu",
@@ -371,7 +371,7 @@ def options_save_game(request):
             commandeEffacer = os.system("rm -f saved_files/slotc*")
             tmp.save(fileName=saveName)
     tmp.dump()
-    return render(request, "ex00/options_save_game.html",
+    return render(request, "options_save_game.html",
                   {"slota": slota, "slotb": slotb, "slotc": slotc,
                    "slotaNiveau": gameSplitA, "slotbNiveau": gameSplitB,
                    "slotcNiveau": gameSplitC, "b_href": "/options/",
