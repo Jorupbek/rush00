@@ -1,19 +1,25 @@
 from django.shortcuts import render, redirect
+from django.views.generic import TemplateView
+
 from moviemon.getinfo import Moviemon
 import os
 import random
 
 
-def home_page(request):
-    movmn = Moviemon()
-    movmn.load_default_settings()
-    movmn.saveTMP()
-    controls_params = {
-        'a_href': '/worldmap', 'b_href': '/options/load_game',
-        'a_title': 'New game', 'b_title': 'Load existing game',
-    }
+class HomePageView(TemplateView):
+    template_name = "ex00/home.html"
 
-    return render(request, "ex00/home.html", controls_params)
+    def get_context_data(self, **kwargs):
+        context = super(HomePageView, self).get_context_data()
+        movmn = Moviemon()
+        movmn.load_default_settings()
+        movmn.saveTMP()
+        context['a_href'] = '/worldmap'
+        context['b_href'] = '/options/load_game'
+        context['a_title'] = 'New game'
+        context['b_title'] = 'Load existing game'
+
+        return context
 
 
 def make_grid(width, height, position):
@@ -29,33 +35,29 @@ def make_grid(width, height, position):
     return grid
 
 
-def displayObject(o):
-    # print(str(o.__class__) + ": " + str(o.__dict__))
-    print(o.position)
-
-
 def do_move(movmn, move):
-    did_move = False
     width = movmn.grid_size['width']
     height = movmn.grid_size['height']
     position = movmn.position
-    if (move == 'left'):
+
+    if move == 'left':
         if position['x'] > 0:
-            movmn.position['x'] = position['x'] - 1
-            did_move = True
-    if (move == 'right'):
+            movmn.position['x'] -= 1
+            return True
+    elif move == 'right':
         if position['x'] < width - 1:
-            movmn.position['x'] = position['x'] + 1
-            did_move = True
-    if (move == 'up'):
+            movmn.position['x'] += 1
+            return True
+    elif move == 'up':
         if position['y'] > 0:
-            movmn.position['y'] = position['y'] - 1
-            did_move = True
-    if (move == 'down'):
+            movmn.position['y'] -= 1
+            return True
+    elif move == 'down':
         if position['y'] < height - 1:
-            movmn.position['y'] = position['y'] + 1
-            did_move = True
-    return did_move
+            movmn.position['y'] += 1
+            return True
+
+    return False
 
 
 def random_move_event(movmn):
@@ -79,11 +81,10 @@ def worldmap(request):
     movmn = Moviemon()
     movmn = movmn.dump()
     if do_move(movmn, move):
-        from random import randint
         movmn.found, movmn.found_moviemon = random_move_event(movmn)
         print("found2!", movmn.found_moviemon)
-        movmn.saveTMP()
-        return (redirect("/worldmap"))
+        return redirect("/worldmap")
+
     width = movmn.grid_size['width']
     height = movmn.grid_size['height']
     position = movmn.position

@@ -1,9 +1,9 @@
-from django.urls import path, re_path
-from moviemon.views import home_page, worldmap, battle, moviedex, moviedexDetail, \
+from django.urls import path
+from moviemon.views import HomePageView, worldmap, battle, moviedex, moviedexDetail, \
     options, options_save_game, options_load_game
 
 urlpatterns = [
-    path('', home_page, name='home'),
+    path('', HomePageView.as_view(), name='home'),
     path('worldmap/', worldmap, name='worldmap'),
     path('worldmap/<slug:id>', worldmap, name='worldmap'),
     path('battle/<slug:id>', battle, name='battle'),
