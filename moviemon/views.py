@@ -1,6 +1,5 @@
 from django.shortcuts import render, redirect
-from django.views import View
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, View
 
 from moviemon.instance import Moviemon
 import os
@@ -78,10 +77,6 @@ def random_move_event(movmn):
     return rand, found_moviemon
 
 
-class Worldmap(View):
-    pass
-
-
 def worldmap(request):
     move = request.GET.get('move', '')
     old_id = request.GET.get('id', '')
@@ -131,6 +126,7 @@ def battle(request, id):
     moviemonballTry = request.GET.get('movieball')
     message = ""
     chance = 0
+
     try:
         forceJoueur = game.get_strength()
         forceMonstre = float(moviemonABattre['rating']) * 10
@@ -141,18 +137,19 @@ def battle(request, id):
             chance = 90
     except Exception as e:
         print(e)
-    if (moviemonballTry):
-        if (game.movieballs > 0 and moviemonABattre):
+
+    if moviemonballTry:
+        if game.movieballs > 0 and moviemonABattre:
             game.movieballs = game.movieballs - 1
             rat = moviemonABattre['rating']
             forceMonstre = float(rat) if rat != 'N/A' else 1 * 10
             chance = 50 - int(forceMonstre) + forceJoueur * 5
             randomNumber = random.randint(1, 100)
             moviemonListAvecDetailClean = []
-            if (chance >= randomNumber or moviemonballTry == 'cheat'):
+            if chance >= randomNumber or moviemonballTry == 'cheat':
                 game.moviedex.append(moviemonABattre)
                 for moviemon in game.movies_detail:
-                    if (moviemon['title'] != moviemonABattre['title']):
+                    if moviemon['title'] != moviemonABattre['title']:
                         moviemonListAvecDetailClean.append(moviemon)
                 game.movies_detail = moviemonListAvecDetailClean
                 game.save_tmp()
@@ -197,7 +194,7 @@ def do_move_moviedex(movmn, move, selected):
     if move == 'down':
         did_move = True
     if did_move:
-        for movie in movmn.moviedex:
+        for _ in movmn.moviedex:
             count += 1
         if count >= 0:
             if selected in ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']:
@@ -300,10 +297,10 @@ def options_load_game(request):
     listeFichiers = os.listdir("saved_files/")
     listeGame = []
     for fichiers in listeFichiers:
-        if (fichiers != "session.txt"):
+        if fichiers != "session.txt":
             listeGame.append(fichiers)
     selectionne = request.GET.get('selectionne')
-    if (selectionne != None):
+    if selectionne != None:
         for fichier in listeGame:
             if selectionne in fichier:
                 game = movmn.load(fichier)
@@ -316,15 +313,15 @@ def options_load_game(request):
     gameSplitB = 0
     gameSplitC = 0
     for game in listeGame:
-        if ("slota" in game):
+        if "slota" in game:
             slota = True
             gameSplit = game.split("_")
             gameSplitA = gameSplit[1]
-        if ("slotb" in game):
+        if "slotb" in game:
             slotb = True
             gameSplit = game.split("_")
             gameSplitB = gameSplit[1]
-        if ("slotc" in game):
+        if "slotc" in game:
             slotc = True
             gameSplit = game.split("_")
             gameSplitC = gameSplit[1]
@@ -341,7 +338,7 @@ def options_save_game(request):
     listeFichiers = os.listdir("saved_files/")
     listeGame = []
     for fichiers in listeFichiers:
-        if (fichiers != "session.txt"):
+        if fichiers != "session.txt":
             listeGame.append(fichiers)
     slota = False
     slotb = False
@@ -350,31 +347,31 @@ def options_save_game(request):
     gameSplitB = 0
     gameSplitC = 0
     for game in listeGame:
-        if ("slota" in game):
+        if "slota" in game:
             slota = True
             gameSplit = game.split("_")
             gameSplitA = gameSplit[1]
-        if ("slotb" in game):
+        if "slotb" in game:
             slotb = True
             gameSplit = game.split("_")
             gameSplitB = gameSplit[1]
-        if ("slotc" in game):
+        if "slotc" in game:
             slotc = True
             gameSplit = game.split("_")
             gameSplitC = gameSplit[1]
     nomSlot = request.GET.get('slot')
     NiveauMax = 10
     NiveauActuel = len(tmp.moviedex)
-    if (nomSlot):
+    if nomSlot:
         saveName = "slot" + nomSlot.lower() + "_" + str(
             NiveauActuel) + "_10.mmg"
-        if ("slota" in saveName):
+        if "slota" in saveName:
             commandeEffacer = os.system("rm -f saved_files/slota*")
             tmp.save(fileName=saveName)
-        if ("slotb" in saveName):
+        if "slotb" in saveName:
             commandeEffacer = os.system("rm -f saved_files/slotb*")
             tmp.save(fileName=saveName)
-        if ("slotc" in saveName):
+        if "slotc" in saveName:
             commandeEffacer = os.system("rm -f saved_files/slotc*")
             tmp.save(fileName=saveName)
     tmp.dump()
