@@ -37,6 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # my apps
+    'moviemon.apps.MoviemonConfig',
 ]
 
 MIDDLEWARE = [
@@ -123,3 +126,28 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+MOVIEMON_SETTINGS = [
+    {
+        'grid_size' : {
+            'height' : 10,
+            'width' : 10
+        },
+        'position_start' : {
+            'x' : 0,
+            'y' : 0
+        },
+        'IMDB_title' : {
+            0 : "True Grit",
+            1 : "Sinbad: The Fifth Voyage",
+            2 : "Jaguar: Part 2",
+            3 : "Breathe Deeply",
+            4 : "Justice League",
+            5 : "Epic Movie",
+            6 : "Glitter",
+            7 : "Alfred the Great",
+            8 : "Back to school",
+            9 : "Disaster Movie",
+        }
+    }
+]
