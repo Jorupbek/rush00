@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views.generic import TemplateView
 
-from moviemon.getinfo import Moviemon
+from moviemon.instance import Moviemon
 import os
 import random
 
@@ -9,11 +9,13 @@ import random
 class HomePageView(TemplateView):
     template_name = "ex00/home.html"
 
+    def __init__(self):
+        movmn = Moviemon()
+        movmn.load_settings()
+        movmn.save_tmp()
+
     def get_context_data(self, **kwargs):
         context = super(HomePageView, self).get_context_data()
-        movmn = Moviemon()
-        movmn.load_default_settings()
-        movmn.saveTMP()
         context['a_href'] = '/worldmap'
         context['b_href'] = '/options/load_game'
         context['a_title'] = 'New game'
@@ -65,10 +67,10 @@ def random_move_event(movmn):
     rand = randint(0, 2)
     found_moviemon = ''
     if rand == 1:
-        movmn.nombreMovieballs += 1
+        movmn.movieballs += 1
     elif rand == 2:
-        if len(movmn.moviemonListAvecDetail) > 0:
-            m = movmn.get_random_movie(movmn.moviemonListAvecDetail)
+        if len(movmn.movies_detail) > 0:
+            m = movmn.get_random_movie(movmn.movies_detail)
             found_moviemon = m['imdb_id']
         else:
             rand = 0
@@ -82,39 +84,44 @@ def worldmap(request):
     movmn = movmn.dump()
     if do_move(movmn, move):
         movmn.found, movmn.found_moviemon = random_move_event(movmn)
-        print("found2!", movmn.found_moviemon)
+        movmn.save_tmp()
         return redirect("/worldmap")
 
     width = movmn.grid_size['width']
     height = movmn.grid_size['height']
     position = movmn.position
+
     controls_params = {
-        'left_href': '/worldmap?move=left', 'up_href': '/worldmap?move=up',
-        'down_href': '/worldmap?move=down',
-        'right_href': '/worldmap?move=right',
-        'left_title': 'Move left', 'up_title': 'Move up',
-        'down_title': 'Move down', 'right_title': 'Move right',
+        'left_href': '/worldmap?move=left', 'left_title': 'Move left',
+        'up_href': '/worldmap?move=up', 'up_title': 'Move up',
+        'down_href': '/worldmap?move=down', 'down_title': 'Move down',
+        'right_href': '/worldmap?move=right', 'right_title': 'Move right',
+
         'select_href': '/moviedex', 'start_href': '/options',
         'select_title': 'Moviedex', 'start_title': 'Options',
         'a_href': '', 'b_href': '/worldmap',
         'a_title': '', 'b_title': '',
     }
+
     if movmn.found == 2:
         if not old_id:
             controls_params['a_href'] = "/battle/" + movmn.found_moviemon
-            controls_params['a_title'] == "Battle!"
-    other_params = {'grid': make_grid(width, height, position),
-                    'found': movmn.found,
-                    'found_moviemon': movmn.found_moviemon,
-                    'numballs': movmn.nombreMovieballs}
-    all_params = {**controls_params, **other_params}
-    return render(request, "ex00/worldmap.html", all_params)
+            controls_params['a_title'] = "Battle!"
+
+    context = {
+        **controls_params,
+        'grid': make_grid(width, height, position),
+        'found': movmn.found,
+        'found_moviemon': movmn.found_moviemon,
+        'numballs': movmn.movieballs
+    }
+
+    return render(request, "ex00/worldmap.html", context)
 
 
 def battle(request, id):
     movmn = Moviemon()
     game = movmn.dump()
-    game.nombreMovieballs
     moviemonABattre = game.get_movie(id)
     moviemonballTry = request.GET.get('movieball')
     message = ""
@@ -130,23 +137,23 @@ def battle(request, id):
     except Exception as e:
         print(e)
     if (moviemonballTry):
-        if (game.nombreMovieballs > 0 and moviemonABattre):
-            game.nombreMovieballs = game.nombreMovieballs - 1
+        if (game.movieballs > 0 and moviemonABattre):
+            game.movieballs = game.movieballs - 1
             forceMonstre = float(moviemonABattre['rating']) * 10
             chance = 50 - int(forceMonstre) + forceJoueur * 5
             randomNumber = random.randint(1, 100)
             moviemonListAvecDetailClean = []
             if (chance >= randomNumber or moviemonballTry == 'cheat'):
                 game.moviedex.append(moviemonABattre)
-                for moviemon in game.moviemonListAvecDetail:
+                for moviemon in game.movies_detail:
                     if (moviemon['title'] != moviemonABattre['nom']):
                         moviemonListAvecDetailClean.append(moviemon)
-                game.moviemonListAvecDetail = moviemonListAvecDetailClean
+                game.movies_detail = moviemonListAvecDetailClean
                 game.saveTMP()
                 message = "Tu as attrapé un moviemon !"
                 moviemonballTry = False
             else:
-                if (game.nombreMovieballs > 0):
+                if (game.movieballs > 0):
                     message = "Retente ta chance !"
                 else:
                     message = "Tu n'as plus de movieballs"
@@ -163,9 +170,10 @@ def battle(request, id):
         'b_href': '/worldmap?id=' + id,
         'a_title': '', 'b_title': 'Retour au World Map',
         "message": message, "forceJoueur": forceJoueur,
-        "nombreMovieballs": game.nombreMovieballs,
+        "movieballs": game.movieballs,
         "moviemonABattre": moviemonABattre, "id": id, "chance": chance
     }
+
     return render(request, "ex00/battle.html", params)
 
 
@@ -174,13 +182,13 @@ def do_move_moviedex(movmn, move, selected):
     count = 0
     dict_selected = {'selected': '', 'left': '', 'right': '', 'up': '',
                      'down': ''}
-    if (move == 'left'):
+    if move == 'left':
         did_move = True
-    if (move == 'right'):
+    if move == 'right':
         did_move = True
-    if (move == 'up'):
+    if move == 'up':
         did_move = True
-    if (move == 'down'):
+    if move == 'down':
         did_move = True
     if did_move:
         for movie in movmn.moviedex:
@@ -267,8 +275,8 @@ def moviedexDetail(request, id):
 
 def options(request):
     movmn = Moviemon()
-    movmn.load_default_settings()
-    movmn.saveTMP()
+    movmn.load_settings()
+    movmn.save_tmp()
     controls_params = {
         'left_href': '', 'up_href': '', 'down_href': '', 'right_href': '',
         'left_title': '', 'up_title': '', 'down_title': '', 'right_title': '',
@@ -282,10 +290,10 @@ def options(request):
 
 def options_load_game(request):
     movmn = Moviemon()
-    listeFichiers = os.listdir("saved_game/")
+    listeFichiers = os.listdir("saved_files/")
     listeGame = []
     for fichiers in listeFichiers:
-        if (fichiers != "mypicklefile.txt"):
+        if (fichiers != "session.txt"):
             listeGame.append(fichiers)
     selectionne = request.GET.get('selectionne')
     if (selectionne != None):
@@ -323,10 +331,10 @@ def options_load_game(request):
 def options_save_game(request):
     movmn = Moviemon()
     tmp = movmn.dump()
-    listeFichiers = os.listdir("saved_game/")
+    listeFichiers = os.listdir("saved_files/")
     listeGame = []
     for fichiers in listeFichiers:
-        if (fichiers != "mypicklefile.txt"):
+        if (fichiers != "session.txt"):
             listeGame.append(fichiers)
     slota = False
     slotb = False
@@ -354,13 +362,13 @@ def options_save_game(request):
         saveName = "slot" + nomSlot.lower() + "_" + str(
             NiveauActuel) + "_10.mmg"
         if ("slota" in saveName):
-            commandeEffacer = os.system("rm -f saved_game/slota*")
+            commandeEffacer = os.system("rm -f saved_files/slota*")
             tmp.save(fileName=saveName)
         if ("slotb" in saveName):
-            commandeEffacer = os.system("rm -f saved_game/slotb*")
+            commandeEffacer = os.system("rm -f saved_files/slotb*")
             tmp.save(fileName=saveName)
         if ("slotc" in saveName):
-            commandeEffacer = os.system("rm -f saved_game/slotc*")
+            commandeEffacer = os.system("rm -f saved_files/slotc*")
             tmp.save(fileName=saveName)
     tmp.dump()
     return render(request, "ex00/options_save_game.html",
