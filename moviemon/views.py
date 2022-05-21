@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.views import View
 from django.views.generic import TemplateView
 
 from moviemon.instance import Moviemon
@@ -77,6 +78,10 @@ def random_move_event(movmn):
     return rand, found_moviemon
 
 
+class Worldmap(View):
+    pass
+
+
 def worldmap(request):
     move = request.GET.get('move', '')
     old_id = request.GET.get('id', '')
@@ -139,17 +144,18 @@ def battle(request, id):
     if (moviemonballTry):
         if (game.movieballs > 0 and moviemonABattre):
             game.movieballs = game.movieballs - 1
-            forceMonstre = float(moviemonABattre['rating']) * 10
+            rat = moviemonABattre['rating']
+            forceMonstre = float(rat) if rat != 'N/A' else 1 * 10
             chance = 50 - int(forceMonstre) + forceJoueur * 5
             randomNumber = random.randint(1, 100)
             moviemonListAvecDetailClean = []
             if (chance >= randomNumber or moviemonballTry == 'cheat'):
                 game.moviedex.append(moviemonABattre)
                 for moviemon in game.movies_detail:
-                    if (moviemon['title'] != moviemonABattre['nom']):
+                    if (moviemon['title'] != moviemonABattre['title']):
                         moviemonListAvecDetailClean.append(moviemon)
                 game.movies_detail = moviemonListAvecDetailClean
-                game.saveTMP()
+                game.save_tmp()
                 message = "Tu as attrapé un moviemon !"
                 moviemonballTry = False
             else:
@@ -157,7 +163,7 @@ def battle(request, id):
                     message = "Retente ta chance !"
                 else:
                     message = "Tu n'as plus de movieballs"
-            game.saveTMP()
+            game.save_tmp()
         else:
             message = "Tu n'as plus de movieballs"
 
@@ -234,7 +240,7 @@ def moviedex(request):
         selected = '0'
     dict_selected = do_move_moviedex(movmn, move, selected)
     if dict_selected:
-        movmn.saveTMP()
+        movmn.save_tmp()
     for moviemon in moviedex:
         moviemon['id'] = str(count)
         count += 1
@@ -254,6 +260,7 @@ def moviedex(request):
         'a_title': 'Moviemon Details', 'b_title': '',
         'moviedex': moviedex, 'selected': selected
     }
+
     return render(request, "moviedex.html", controls_params)
 
 
@@ -300,7 +307,7 @@ def options_load_game(request):
         for fichier in listeGame:
             if selectionne in fichier:
                 game = movmn.load(fichier)
-                game.saveTMP()
+                game.save_tmp()
             # return(redirect("/worldmap"))
     slota = False
     slotb = False
