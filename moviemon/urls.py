@@ -1,15 +1,15 @@
-from django.urls import path, re_path, include
-from . import views
+from django.urls import path, re_path
+from moviemon.views import home_page, worldmap, battle, moviedex, moviedexDetail, \
+    options, options_save_game, options_load_game
 
 urlpatterns = [
-    path('', views.accueil, name='accueil'),
-    re_path(r'^$', views.accueil, name='accueil'),
-    path('worldmap/', views.worldmap, name='worldmap'),
-    path('worldmap/<slug:id>', views.worldmap, name='worldmap'),
-    path('battle/<slug:id>', views.battle, name='battle'),
-    path('moviedex/', views.moviedex, name='moviedex'),
-    path('moviedex/<slug:id>', views.moviedexDetail, name='moviedexDetail'),
-    path('options/', views.options, name='options'),
-    path('options/load_game/', views.options_load_game, name='optionsLoad'),
-    path('options/save_game/', views.options_save_game, name='optionsSave'),
+    path('', home_page, name='home'),
+    path('worldmap/', worldmap, name='worldmap'),
+    path('worldmap/<slug:id>', worldmap, name='worldmap'),
+    path('battle/<slug:id>', battle, name='battle'),
+    path('moviedex/', moviedex, name='moviedex'),
+    path('moviedex/<slug:id>',moviedexDetail, name='moviedexDetail'),
+    path('options/', options, name='options'),
+    path('options/load_game/', options_load_game, name='optionsLoad'),
+    path('options/save_game/', options_save_game, name='optionsSave'),
 ]

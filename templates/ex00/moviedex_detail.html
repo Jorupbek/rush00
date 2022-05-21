@@ -1,0 +1,37 @@
+{% extends "ex00/base.html" %}
+
+{% block title %}
+Detail
+{% endblock %}
+
+{% block style %}
+{% load static %}
+<!-- <link rel="stylesheet" type="text/css" href="{% static 'ex01/style2.css' %}" /> -->
+{% endblock %}
+
+{% block content %}
+<div id="console">
+    <div id="ecran">
+	  <div id="moviedex_item_detail">
+		<div class="name">{{moviemonDetail.nom}}</div>
+			<br>
+			<img class="moviedex_item_detail" src={{moviemonDetail.poster}} alt="moviemon">
+			<br>
+			Réalisateur : {{moviemonDetail.realisateur}}
+			<br>
+			Année : {{moviemonDetail.annee}}
+			 - 
+			Rating : {{moviemonDetail.rating}}
+			<br>
+			Synopsis : {{moviemonDetail.synopsis}}
+			<br>
+			Acteurs : {{moviemonDetail.acteurs}}
+      </div> <!-- moviedex_item_detail -->
+      <div id="info">
+			<div>B - Back</div>
+      	</div> <!-- info-->
+    </div> <!-- ecran-->
+    {% include "ex00/controles.html" %}
+</div> <!-- console-->
+
+{% endblock %}

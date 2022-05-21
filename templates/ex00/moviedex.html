@@ -1,0 +1,35 @@
+{% extends "ex00/base.html" %}
+
+{% block title %}
+Moviedex
+{% endblock %}
+
+{% block style %}
+{% load static %}
+<!-- <link rel="stylesheet" type="text/css" href="{% static 'ex01/style2.css' %}" /> -->
+{% endblock %}
+
+{% block content %}
+<div id="console">
+    <div id="ecran">
+	  <div id="moviedex_item">
+		<div class="name">Moviedex</div>
+			<div>
+				{% for moviemon in moviedex%}
+                    {% if moviemon.id == selected %}
+                    <img class="moviedex_item" src={{moviemon.poster}} alt="moviemon" style="border: solid; border-color: blue; border-radius: 8%; padding: 3px;">
+                    {% else %}
+                    <img class="moviedex_item" src={{moviemon.poster}} alt="moviemon" style="padding: 3px;">
+                    {% endif %}
+				{% endfor %}
+			</div>
+		</div> <!--moviedex_item-->
+		<div id="info">
+			<div>A - More information</div>
+			<div>select - Back</div>
+      	</div> <!-- info-->
+    </div> <!-- ecran-->
+    {% include "ex00/controles.html" %}
+</div> <!-- console-->
+
+{% endblock %}

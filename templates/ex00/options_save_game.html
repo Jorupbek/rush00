@@ -1,0 +1,59 @@
+{% extends "ex00/base.html" %}
+
+{% block title %}
+Save
+{% endblock %}
+
+{% block style %}
+{% load static %}
+<!-- <link rel="stylesheet" type="text/css" href="{% static 'ex01/style2.css' %}" /> -->
+{% endblock %}
+
+
+{% block content %}
+<div id="console">
+	
+	<div id="ecran">
+		<div>SAVE GAME</div>
+		<div>
+			{% if not slota%}
+				<button style="background-color: pink; color:white; border-radius: 50%; padding: 15px 16px"><a href="/options/save_game?slot=A" title="saveSlotA"> Slot A - Etat : "Free" </a></button>
+			{%endif %}
+
+			{% if slota%}
+				<button style="background-color: pink; color:white; border-radius: 50%; padding: 15px 16px"><a href="/options/save_game?slot=A" title="saveSlotA"> Slot A - Niveau : {{slotaNiveau}} / 10</a></button>
+			{%endif %}
+		</div>	
+
+		<div>
+			{% if not slotb%}
+				<button style="background-color: red; color:white; border-radius: 50%; padding: 15px 16px"><a href="/options/save_game?slot=B" title="saveSlotB"> Slot B - Etat : "Free" </a></button>
+			{%endif %}
+
+			{% if slotb%}
+				<button style="background-color: red; color:white; border-radius: 50%; padding: 15px 16px"><a href="/options/save_game?slot=B" title="saveSlotB"> Slot B - Niveau : {{slotbNiveau}} / 10</a></button>
+			{%endif %}
+		</div>	
+
+		<div>
+			{% if not slotc%}
+				<button style="background-color: green; color:white; border-radius: 50%; padding: 15px 16px"><a href="/options/save_game?slot=C" title="saveSlotC"> Slot C - Etat : "Free" </a></button>
+			{%endif %}
+
+			{% if slotc%}
+				<button style="background-color: green; color:white; border-radius: 50%; padding: 15px 16px"><a href="/options/save_game?slot=C" title="saveSlotC"> Slot C - Niveau : {{slotcNiveau}} / 10</a></button>
+			{%endif %}
+		</div>
+		<div id="info">
+			<div>A - Save</div>
+			<div>B - Cancel</div>
+		</div> <!-- info -->	
+	</div> <!-- ecran -->
+	
+	{% include "ex00/controles.html" %}
+
+</div> <!-- console-->
+
+{% endblock %}
+
+

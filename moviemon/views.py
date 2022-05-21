@@ -1,34 +1,19 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
 from moviemon.getinfo import Moviemon
 import os
 import random
 
-# Create your views here.
 
-empty_controls_params = {
-    'left_href': '', 'up_href': '', 'down_href': '', 'right_href': '',
-    'left_title': '', 'up_title': '', 'down_title': '', 'right_title': '',
-    'select_href': '', 'start_href': '',
-    'select_title': '', 'start_title': '',
-    'a_href': '', 'b_href': '',
-    'a_title': '', 'b_title': '',
-}
-
-
-def accueil(request):
-    settings = Moviemon()
-    settings.load_default_settings()
-    settings.saveTMP()
+def home_page(request):
+    movmn = Moviemon()
+    movmn.load_default_settings()
+    movmn.saveTMP()
     controls_params = {
-        'left_href': '', 'up_href': '', 'down_href': '', 'right_href': '',
-        'left_title': '', 'up_title': '', 'down_title': '', 'right_title': '',
-        'select_href': '', 'start_href': '',
-        'select_title': '', 'start_title': '',
         'a_href': '/worldmap', 'b_href': '/options/load_game',
         'a_title': 'New game', 'b_title': 'Load existing game',
     }
-    return render(request, "ex00/accueil.html", controls_params)
+
+    return render(request, "ex00/home.html", controls_params)
 
 
 def make_grid(width, height, position):
@@ -49,59 +34,59 @@ def displayObject(o):
     print(o.position)
 
 
-def do_move(settings, move):
+def do_move(movmn, move):
     did_move = False
-    width = settings.grid_size['width']
-    height = settings.grid_size['height']
-    position = settings.position
+    width = movmn.grid_size['width']
+    height = movmn.grid_size['height']
+    position = movmn.position
     if (move == 'left'):
         if position['x'] > 0:
-            settings.position['x'] = position['x'] - 1
+            movmn.position['x'] = position['x'] - 1
             did_move = True
     if (move == 'right'):
         if position['x'] < width - 1:
-            settings.position['x'] = position['x'] + 1
+            movmn.position['x'] = position['x'] + 1
             did_move = True
     if (move == 'up'):
         if position['y'] > 0:
-            settings.position['y'] = position['y'] - 1
+            movmn.position['y'] = position['y'] - 1
             did_move = True
     if (move == 'down'):
         if position['y'] < height - 1:
-            settings.position['y'] = position['y'] + 1
+            movmn.position['y'] = position['y'] + 1
             did_move = True
     return did_move
 
 
-def random_move_event(settings):
+def random_move_event(movmn):
     from random import randint
     rand = randint(0, 2)
-    found_Moviemon = ''
+    found_moviemon = ''
     if rand == 1:
-        settings.nombreMovieballs += 1
+        movmn.nombreMovieballs += 1
     elif rand == 2:
-        if len(settings.MoviemonListAvecDetail) > 0:
-            m = settings.get_random_movie(settings.MoviemonListAvecDetail)
-            found_Moviemon = m['imdb_id']
+        if len(movmn.moviemonListAvecDetail) > 0:
+            m = movmn.get_random_movie(movmn.moviemonListAvecDetail)
+            found_moviemon = m['imdb_id']
         else:
             rand = 0
-    return rand, found_Moviemon
+    return rand, found_moviemon
 
 
 def worldmap(request):
     move = request.GET.get('move', '')
     old_id = request.GET.get('id', '')
-    settings = Moviemon()
-    settings = settings.dump()
-    if do_move(settings, move):
+    movmn = Moviemon()
+    movmn = movmn.dump()
+    if do_move(movmn, move):
         from random import randint
-        settings.found, settings.found_Moviemon = random_move_event(settings)
-        print("found2!", settings.found_Moviemon)
-        settings.saveTMP()
+        movmn.found, movmn.found_moviemon = random_move_event(movmn)
+        print("found2!", movmn.found_moviemon)
+        movmn.saveTMP()
         return (redirect("/worldmap"))
-    width = settings.grid_size['width']
-    height = settings.grid_size['height']
-    position = settings.position
+    width = movmn.grid_size['width']
+    height = movmn.grid_size['height']
+    position = movmn.position
     controls_params = {
         'left_href': '/worldmap?move=left', 'up_href': '/worldmap?move=up',
         'down_href': '/worldmap?move=down',
@@ -113,29 +98,29 @@ def worldmap(request):
         'a_href': '', 'b_href': '/worldmap',
         'a_title': '', 'b_title': '',
     }
-    if settings.found == 2:
+    if movmn.found == 2:
         if not old_id:
-            controls_params['a_href'] = "/battle/" + settings.found_Moviemon
+            controls_params['a_href'] = "/battle/" + movmn.found_moviemon
             controls_params['a_title'] == "Battle!"
     other_params = {'grid': make_grid(width, height, position),
-                    'found': settings.found,
-                    'found_Moviemon': settings.found_Moviemon,
-                    'numballs': settings.nombreMovieballs}
+                    'found': movmn.found,
+                    'found_moviemon': movmn.found_moviemon,
+                    'numballs': movmn.nombreMovieballs}
     all_params = {**controls_params, **other_params}
     return render(request, "ex00/worldmap.html", all_params)
 
 
 def battle(request, id):
-    settings = Moviemon()
-    game = settings.dump()
+    movmn = Moviemon()
+    game = movmn.dump()
     game.nombreMovieballs
-    MoviemonABattre = game.get_movie(id)
-    MoviemonballTry = request.GET.get('movieball')
+    moviemonABattre = game.get_movie(id)
+    moviemonballTry = request.GET.get('movieball')
     message = ""
     chance = 0
     try:
         forceJoueur = game.get_strength()
-        forceMonstre = float(MoviemonABattre['rating']) * 10
+        forceMonstre = float(moviemonABattre['rating']) * 10
         chance = 50 - int(forceMonstre) + forceJoueur * 5
         if chance < 1:
             chance = 1
@@ -143,22 +128,22 @@ def battle(request, id):
             chance = 90
     except Exception as e:
         print(e)
-    if (MoviemonballTry):
-        if (game.nombreMovieballs > 0 and MoviemonABattre):
+    if (moviemonballTry):
+        if (game.nombreMovieballs > 0 and moviemonABattre):
             game.nombreMovieballs = game.nombreMovieballs - 1
-            forceMonstre = float(MoviemonABattre['rating']) * 10
+            forceMonstre = float(moviemonABattre['rating']) * 10
             chance = 50 - int(forceMonstre) + forceJoueur * 5
             randomNumber = random.randint(1, 100)
-            MoviemonListAvecDetailClean = []
-            if (chance >= randomNumber or MoviemonballTry == 'cheat'):
-                game.moviedex.append(MoviemonABattre)
-                for Moviemon in game.MoviemonListAvecDetail:
-                    if (Moviemon['title'] != MoviemonABattre['nom']):
-                        MoviemonListAvecDetailClean.append(Moviemon)
-                game.MoviemonListAvecDetail = MoviemonListAvecDetailClean
+            moviemonListAvecDetailClean = []
+            if (chance >= randomNumber or moviemonballTry == 'cheat'):
+                game.moviedex.append(moviemonABattre)
+                for moviemon in game.moviemonListAvecDetail:
+                    if (moviemon['title'] != moviemonABattre['nom']):
+                        moviemonListAvecDetailClean.append(moviemon)
+                game.moviemonListAvecDetail = moviemonListAvecDetailClean
                 game.saveTMP()
-                message = "Tu as attrapé un Moviemon !"
-                MoviemonballTry = False
+                message = "Tu as attrapé un moviemon !"
+                moviemonballTry = False
             else:
                 if (game.nombreMovieballs > 0):
                     message = "Retente ta chance !"
@@ -178,12 +163,12 @@ def battle(request, id):
         'a_title': '', 'b_title': 'Retour au World Map',
         "message": message, "forceJoueur": forceJoueur,
         "nombreMovieballs": game.nombreMovieballs,
-        "MoviemonABattre": MoviemonABattre, "id": id, "chance": chance
+        "moviemonABattre": moviemonABattre, "id": id, "chance": chance
     }
     return render(request, "ex00/battle.html", params)
 
 
-def do_move_moviedex(settings, move, selected):
+def do_move_moviedex(movmn, move, selected):
     did_move = False
     count = 0
     dict_selected = {'selected': '', 'left': '', 'right': '', 'up': '',
@@ -197,7 +182,7 @@ def do_move_moviedex(settings, move, selected):
     if (move == 'down'):
         did_move = True
     if did_move:
-        for movie in settings.moviedex:
+        for movie in movmn.moviedex:
             count += 1
         if count >= 0:
             if selected in ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']:
@@ -232,17 +217,17 @@ def do_move_moviedex(settings, move, selected):
 def moviedex(request):
     selected = request.GET.get('selected', '')
     move = request.GET.get('move', '')
-    settings = Moviemon()
-    settings = settings.dump()
-    moviedex = settings.moviedex
+    movmn = Moviemon()
+    movmn = movmn.dump()
+    moviedex = movmn.moviedex
     count = 0
     if not selected:
         selected = '0'
-    dict_selected = do_move_moviedex(settings, move, selected)
+    dict_selected = do_move_moviedex(movmn, move, selected)
     if dict_selected:
-        settings.saveTMP()
-    for Moviemon in moviedex:
-        Moviemon['id'] = str(count)
+        movmn.saveTMP()
+    for moviemon in moviedex:
+        moviemon['id'] = str(count)
         count += 1
     a_href = dict_selected['selected']
     if a_href not in ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']:
@@ -264,8 +249,8 @@ def moviedex(request):
 
 
 def moviedexDetail(request, id):
-    settings = Moviemon()
-    game = settings.dump()
+    movmn = Moviemon()
+    game = movmn.dump()
     moviedex = game.moviedex
     controls_params = {
         'left_href': '', 'up_href': '', 'down_href': '', 'right_href': '',
@@ -274,15 +259,15 @@ def moviedexDetail(request, id):
         'select_title': '', 'start_title': '',
         'a_href': '', 'b_href': '/moviedex',
         'a_title': '', 'b_title': 'Moviedex',
-        "MoviemonDetail": moviedex[int(id)]
+        "moviemonDetail": moviedex[int(id)]
     }
     return render(request, "ex00/moviedex_detail.html", controls_params)
 
 
 def options(request):
-    settings = Moviemon()
-    settings.load_default_settings()
-    settings.saveTMP()
+    movmn = Moviemon()
+    movmn.load_default_settings()
+    movmn.saveTMP()
     controls_params = {
         'left_href': '', 'up_href': '', 'down_href': '', 'right_href': '',
         'left_title': '', 'up_title': '', 'down_title': '', 'right_title': '',
@@ -295,7 +280,7 @@ def options(request):
 
 
 def options_load_game(request):
-    settings = Moviemon()
+    movmn = Moviemon()
     listeFichiers = os.listdir("saved_game/")
     listeGame = []
     for fichiers in listeFichiers:
@@ -305,7 +290,7 @@ def options_load_game(request):
     if (selectionne != None):
         for fichier in listeGame:
             if selectionne in fichier:
-                game = settings.load(fichier)
+                game = movmn.load(fichier)
                 game.saveTMP()
             # return(redirect("/worldmap"))
     slota = False
@@ -335,8 +320,8 @@ def options_load_game(request):
 
 
 def options_save_game(request):
-    settings = Moviemon()
-    tmp = settings.dump()
+    movmn = Moviemon()
+    tmp = movmn.dump()
     listeFichiers = os.listdir("saved_game/")
     listeGame = []
     for fichiers in listeFichiers:
@@ -382,7 +367,3 @@ def options_save_game(request):
                    "slotaNiveau": gameSplitA, "slotbNiveau": gameSplitB,
                    "slotcNiveau": gameSplitC, "b_href": "/options/",
                    "b_title": "retour"})
-
-
-def handler404(request):
-    return render(request, '404.html', status=404)

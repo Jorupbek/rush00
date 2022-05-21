@@ -1,0 +1,53 @@
+{% extends "ex00/base.html" %}
+
+{% block title %}
+Battle
+{% endblock %}
+
+{% block style %}
+{% load static %}
+<!-- <link rel="stylesheet" type="text/css" href="{% static 'ex01/style2.css' %}" /> -->
+{% endblock %}
+
+{% block content %}
+<div id="console">
+    <div id="ecran">
+
+		<div >Battle</div>
+        {% if moviemonABattre.nom %}
+        <div class="info_battle">
+            <div>Essayez de capturer le Moviemon que vous avez débusqué !</div>
+            <div>Moviemon : {{moviemonABattre.nom}} -- Force : {{moviemonABattre.rating}} -- Taux reussite : {{chance}}%</div>
+        </div> <!-- info battle-->
+
+        <div ><img id="affiche" src={{moviemonABattre.poster}} alt="moviemon" ></div>
+
+        <div class="info_battle">
+            <div>Joueur : force {{forceJoueur}}, nombre de movieBalls en stock : {{nombreMovieballs}}</div>
+            {% if message == "Tu as attrapé un moviemon !"%}
+                <div style="color : blue">{{message}}</div>
+                <div> <a title="TryCatch">A - Launch movieball </a></div>
+            {% endif %}
+            {% if message == "Retente ta chance !"%}
+                <div style="color : green">{{message}}</div>
+                <div> A - Launch movieball </a></div>
+            {% endif %}
+            {% if message == "Tu n'as plus de movieballs"%}
+                <div style="color : red">{{message}}</div>
+            {% endif %}
+            {% if message == ""%}
+            <div> A - Launch movieball </a></div>
+            {% endif %}
+        {% endif %}
+            <div>B: Retour au World Map </div>
+        </div> <!-- info battle-->
+
+    </div> <!-- ecran -->
+
+  {% include "ex00/controles.html" %}
+</div>
+
+</div> <!-- console-->
+
+
+{% endblock %}

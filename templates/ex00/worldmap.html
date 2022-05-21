@@ -1,0 +1,41 @@
+{% extends "ex00/base.html" %}
+
+{% block title %}
+Moviemon - World Map
+{% endblock %}
+
+{% block style %}
+{% load static %}
+<!-- <link rel="stylesheet" type="text/css" href="{% static 'ex01/style2.css' %}" /> -->
+{% endblock %}
+
+
+{% block content %}
+
+<div id="console">
+    <div id="ecran">
+        <div>World Map</div>
+        <div id="grid">
+            {% for x in grid %}
+                {% for y in x %}
+                    <span class="square">{{y}}</span> 
+                {% endfor %}  
+                 <br>
+            {% endfor %}
+		</div> <!-- grid-->
+        <div id="info">
+			<div id="numballs">You have {{numballs}}  movieballs</div>
+			{% if found == 1 %}
+				<div id="message">You got a movieball!</div>
+			{% elif found == 2 %}
+				<div id="message">You found Moviemon {{found_moviemon}}!</div>
+                <div>Press A to try to catch it!</div>
+			{% endif %}
+        </div>  <!-- info-->
+    </div> <!-- ecran-->
+	{% include "ex00/controles.html" %}
+</div> <!-- console-->
+
+{% endblock %}
+
+
