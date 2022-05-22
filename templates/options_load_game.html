@@ -20,7 +20,7 @@ Load
 				<button style="background-color: pink; color:white; border-radius: 50%; padding: 15px 16px">Slot A - Etat : "Free" </button>
 			{%endif %}
 			{% if slota%}
-				<button style="background-color: pink; color:white; border-radius: 50%; padding: 15px 16px"><a href="/options/load_game?selectionne=slota">Slot A - Niveau : {{slotaNiveau}} / 10</a></button>
+				<button style="background-color: pink; color:white; border-radius: 50%; padding: 15px 16px"><a href="/options/load_game?select_one=slota">Slot A - Niveau : {{slotaNiveau}} / 10</a></button>
 
 			{%endif %}
 		</div>
@@ -30,7 +30,7 @@ Load
 			{%endif %}
 
 			{% if slotb%}
-				<button style="background-color: red; color:white; border-radius: 50%; padding: 15px 16px"><a href="/options/load_game?selectionne=slotb">Slot B - Niveau : {{slotbNiveau}} / 10</a></button>
+				<button style="background-color: red; color:white; border-radius: 50%; padding: 15px 16px"><a href="/options/load_game?select_one=slotb">Slot B - Niveau : {{slotbNiveau}} / 10</a></button>
 			{%endif %}
 		</div> <!-- end slot B-->
 		<div> <!-- slot C-->
@@ -38,7 +38,7 @@ Load
 			<button style="background-color: green; color:white; border-radius: 50%; padding: 15px 16px">Slot C - Etat : "Free" </button>
 		{%endif %}
 		{% if slotc%}
-			<button style="background-color: green; color:white; border-radius: 50%; padding: 15px 16px"><a href="/options/load_game?selectionne=slotc">Slot C - Niveau : {{slotcNiveau}} / 10 </a></button>
+			<button style="background-color: green; color:white; border-radius: 50%; padding: 15px 16px"><a href="/options/load_game?select_one=slotc">Slot C - Niveau : {{slotcNiveau}} / 10 </a></button>
 		{%endif %}
 		</div> <!-- end slot C-->
 		<div id="info">
