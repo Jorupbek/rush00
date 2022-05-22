@@ -1,3 +1,4 @@
+
 body {
     text-align: center;
     font-size: 4vw;
@@ -10,7 +11,6 @@ div{
 
 #console {
     width: 50vw;
-    height: 61vw;
     border: 5px solid #c4e2f7;
     padding: 3vw;
     background-color: #c4e2f7;
@@ -22,21 +22,26 @@ div{
 	background-color: white;
 }
 #info {
-	 font-size: 2vw;
+    font-size: 2vw;
+    position: absolute;
+    right: 0%;
+    top: 10%;
 }
 
-#controles {
 
-    top: 50vw;
+#controles {
     padding-top: 1vh;
     padding-bottom: 0vh;
     font-size: 3vw;
     flex-direction: row;
-    display: flex;
+    display: grid;
     align-items: center;
     justify-content: space-evenly;
-
+    position: absolute;
+    left: 5%;
+    top: 20%;
 }
+
 .start_select {
 	border: 1px solid gray;
     border-radius: 30px;

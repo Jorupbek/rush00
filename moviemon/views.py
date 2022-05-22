@@ -71,7 +71,7 @@ def random_move_event(movmn):
     elif rand == 2:
         if len(movmn.movies_detail) > 0:
             m = movmn.get_random_movie(movmn.movies_detail)
-            found_moviemon = m['imdb_id']
+            found_moviemon = m['id']
         else:
             rand = 0
     return rand, found_moviemon
@@ -96,7 +96,6 @@ def worldmap(request):
         'up_href': '/worldmap?move=up', 'up_title': 'Move up',
         'down_href': '/worldmap?move=down', 'down_title': 'Move down',
         'right_href': '/worldmap?move=right', 'right_title': 'Move right',
-
         'select_href': '/moviedex', 'start_href': '/options',
         'select_title': 'Moviedex', 'start_title': 'Options',
         'a_href': '', 'b_href': '/worldmap',
@@ -113,7 +112,7 @@ def worldmap(request):
         'grid': make_grid(width, height, position),
         'found': movmn.found,
         'found_moviemon': movmn.found_moviemon,
-        'numballs': movmn.movieballs
+        'movieballs': movmn.movieballs
     }
 
     return render(request, "worldmap.html", context)
@@ -127,7 +126,7 @@ def battle(request, id):
     message = ""
 
     strange = game.get_strength()
-    strange_monstr = float(battle_moviemon['rating']) * 10
+    strange_monstr = float(battle_moviemon['rating']) * 10 if battle_moviemon else 0
     chance = 50 - int(strange_monstr) + strange * 5
     if chance < 1:
         chance = 1
@@ -148,7 +147,7 @@ def battle(request, id):
         else:
             message = "You don't have movieballs"
 
-    params = {
+    context = {
         'left_href': '', 'up_href': '', 'down_href': '', 'right_href': '',
         'left_title': '', 'up_title': '', 'down_title': '', 'right_title': '',
         'select_href': '', 'start_href': '',
@@ -161,42 +160,30 @@ def battle(request, id):
         "battle_moviemon": battle_moviemon, "id": id, "chance": chance
     }
 
-    return render(request, "battle.html", params)
+    return render(request, "battle.html", context)
 
 
 def do_move_moviedex(movmn, move, selected):
     did_move = False
-    count = 0
-    dict_selected = {'selected': '', 'left': '', 'right': '', 'up': '',
-                     'down': ''}
-    if move == 'left':
-        did_move = True
-    if move == 'right':
-        did_move = True
-    if move == 'up':
-        did_move = True
-    if move == 'down':
+    dict_selected = {'selected': '', 'left': '', 'right': '', 'up': '', 'down': ''}
+    if move in ['left', 'right', 'up', 'down']:
         did_move = True
     if did_move:
-        for _ in movmn.moviedex:
-            count += 1
+        count = len(movmn.moviedex)
         if count >= 0:
             if selected in ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']:
                 dict_selected['selected'] = selected
-        if dict_selected['selected'] in ['0', '1', '2', '3', '4', '5', '6', '7',
-                                         '8', '9']:
+        if dict_selected['selected'] in ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']:
             if selected in ['5', '6', '7', '8', '9'] and move == 'up':
                 if count > (int(selected) - 5):
                     dict_selected['up'] = str(int(selected) - 5)
             elif selected in ['0', '1', '2', '3', '4'] and move == 'down':
                 if count > (int(selected) + 5):
                     dict_selected['down'] = str(int(selected) + 5)
-            elif selected in ['1', '2', '3', '4', '6', '7', '8',
-                              '9'] and move == 'left':
+            elif selected in ['1', '2', '3', '4', '6', '7', '8', '9'] and move == 'left':
                 if count > (int(selected) - 1):
                     dict_selected['left'] = str(int(selected) - 1)
-            elif selected in ['0', '1', '2', '3', '5', '6', '7',
-                              '8'] and move == 'right':
+            elif selected in ['0', '1', '2', '3', '5', '6', '7', '8'] and move == 'right':
                 if count > (int(selected) + 1):
                     dict_selected['right'] = str(int(selected) + 1)
             if not dict_selected['up']:
@@ -278,25 +265,25 @@ def options(request):
 
 def options_load_game(request):
     movmn = Moviemon()
-    listeFichiers = os.listdir("saved_files/")
-    listeGame = []
-    for fichiers in listeFichiers:
-        if fichiers != "session.txt":
-            listeGame.append(fichiers)
-    selectionne = request.GET.get('selectionne')
-    if selectionne != None:
-        for fichier in listeGame:
-            if selectionne in fichier:
-                game = movmn.load(fichier)
+    save_dir = os.listdir("saved_files/")
+    games_list = []
+    for file in save_dir:
+        if file != "session.txt":
+            games_list.append(file)
+    select_one = request.GET.get('select_one')
+    if select_one:
+        for file in games_list:
+            if select_one in file:
+                game = movmn.load(file)
                 game.save_tmp()
-            # return(redirect("/worldmap"))
+                return(redirect("/worldmap"))
     slota = False
     slotb = False
     slotc = False
     gameSplitA = 0
     gameSplitB = 0
     gameSplitC = 0
-    for game in listeGame:
+    for game in games_list:
         if "slota" in game:
             slota = True
             gameSplit = game.split("_")
@@ -311,26 +298,26 @@ def options_load_game(request):
             gameSplitC = gameSplit[1]
     return render(request, "options_load_game.html",
                   {"slota": slota, "slotb": slotb, "slotc": slotc,
-                   "slotaNiveau": gameSplitA, "slotbNiveau": gameSplitB,
-                   "slotcNiveau": gameSplitC, "b_href": "/", "b_title": "menu",
+                   "slot_a": gameSplitA, "slot_b": gameSplitB,
+                   "slot_c": gameSplitC, "b_href": "/", "b_title": "menu",
                    "a_href": "/worldmap/", "a_title": "load"})
 
 
 def options_save_game(request):
     movmn = Moviemon()
     tmp = movmn.dump()
-    listeFichiers = os.listdir("saved_files/")
-    listeGame = []
-    for fichiers in listeFichiers:
-        if fichiers != "session.txt":
-            listeGame.append(fichiers)
+    save_dir = os.listdir("saved_files/")
+    games_list = []
+    for file in save_dir:
+        if file != "session.txt":
+            games_list.append(file)
     slota = False
     slotb = False
     slotc = False
     gameSplitA = 0
     gameSplitB = 0
     gameSplitC = 0
-    for game in listeGame:
+    for game in games_list:
         if "slota" in game:
             slota = True
             gameSplit = game.split("_")
@@ -343,24 +330,23 @@ def options_save_game(request):
             slotc = True
             gameSplit = game.split("_")
             gameSplitC = gameSplit[1]
-    nomSlot = request.GET.get('slot')
-    NiveauMax = 10
-    NiveauActuel = len(tmp.moviedex)
-    if nomSlot:
-        saveName = "slot" + nomSlot.lower() + "_" + str(
-            NiveauActuel) + "_10.mmg"
-        if "slota" in saveName:
-            commandeEffacer = os.system("rm -f saved_files/slota*")
-            tmp.save(fileName=saveName)
-        if "slotb" in saveName:
-            commandeEffacer = os.system("rm -f saved_files/slotb*")
-            tmp.save(fileName=saveName)
-        if "slotc" in saveName:
-            commandeEffacer = os.system("rm -f saved_files/slotc*")
-            tmp.save(fileName=saveName)
+    slot_name = request.GET.get('slot')
+    len_moviedex = len(tmp.moviedex)
+    if slot_name:
+        file_name = "slot" + slot_name.lower() + "_" + str(
+            len_moviedex) + "_10.mmg"
+        if "slota" in file_name:
+            os.system("rm -f saved_files/slota*")
+            tmp.save(file_name=file_name)
+        if "slotb" in file_name:
+            os.system("rm -f saved_files/slotb*")
+            tmp.save(file_name=file_name)
+        if "slotc" in file_name:
+            os.system("rm -f saved_files/slotc*")
+            tmp.save(file_name=file_name)
     tmp.dump()
     return render(request, "options_save_game.html",
                   {"slota": slota, "slotb": slotb, "slotc": slotc,
-                   "slotaNiveau": gameSplitA, "slotbNiveau": gameSplitB,
-                   "slotcNiveau": gameSplitC, "b_href": "/options/",
-                   "b_title": "retour"})
+                   "slot_a": gameSplitA, "slot_b": gameSplitB,
+                   "slot_c": gameSplitC, "b_href": "/options/",
+                   "b_title": "return"})

@@ -28,21 +28,30 @@ class Moviemon:
         omdb.set_default('apikey', key)
         for index in moviews:
             if res := omdb.get(title=moviews[index]):
-                self.movies_detail.append(res)
+                self.movies_detail.append({
+                    'id': res['imdb_id'],
+                    'title': res['title'],
+                    'poster': res['poster'],
+                    'director': res['director'],
+                    'year': res['year'],
+                    'rating': res['imdb_rating'],
+                    'plot': res['plot'],
+                    'actors': res['actors'],
+                })
 
     def get_strength(self):
         return len(self.moviedex)
 
     def get_movie(self, mov_id):
         for moviemon in self.movies_detail:
-            if moviemon['imdb_id'] == mov_id:
+            if moviemon['id'] == mov_id:
                 return {
-                    'id': moviemon['imdb_id'],
+                    'id': moviemon['id'],
                     'title': moviemon['title'],
                     'poster': moviemon['poster'],
                     'director': moviemon['director'],
                     'year': moviemon['year'],
-                    'rating': moviemon['imdb_rating'],
+                    'rating': moviemon['rating'],
                     'plot': moviemon['plot'],
                     'actors': moviemon['actors'],
                 }

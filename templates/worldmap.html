@@ -28,22 +28,13 @@ Moviemon - World Map
             {% endfor %}
 		</div> <!-- grid-->
         <div id="info">
-			<div id="numballs">You have {{numballs}}  movieballs</div>
-                <style>
-                #console {height: 49vw;}
-                #controles {padding-top: 1vh;}
-                </style>
+			<div id="numballs">You have {{movieballs}}  movieballs</div>
+
 			{% if found == 1 %}
                 <style>
-                #console {height: 55vw;}
-                #controles {padding-top: 10vh;}
                 </style>
 				<div id="message">You got a movieball!</div>
 			{% elif found == 2 %}
-                <style>
-                #console {height: 60vw;}
-                #controles {padding-top: 20%;}
-                </style>
 				<div id="message">You found Moviemon {{found_moviemon}}!</div>
                 <div>Press A to try to catch it!</div>
 			{% endif %}
