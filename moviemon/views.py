@@ -71,7 +71,7 @@ def random_move_event(movmn):
     elif rand == 2:
         if len(movmn.movies_detail) > 0:
             m = movmn.get_random_movie(movmn.movies_detail)
-            found_moviemon = m['imdb_id']
+            found_moviemon = m['id']
         else:
             rand = 0
     return rand, found_moviemon
@@ -113,7 +113,7 @@ def worldmap(request):
         'grid': make_grid(width, height, position),
         'found': movmn.found,
         'found_moviemon': movmn.found_moviemon,
-        'numballs': movmn.movieballs
+        'movieballs': movmn.movieballs
     }
 
     return render(request, "worldmap.html", context)
@@ -127,7 +127,7 @@ def battle(request, id):
     message = ""
 
     strange = game.get_strength()
-    strange_monstr = float(battle_moviemon['rating']) * 10
+    strange_monstr = float(battle_moviemon['rating']) * 10 if battle_moviemon else 0
     chance = 50 - int(strange_monstr) + strange * 5
     if chance < 1:
         chance = 1

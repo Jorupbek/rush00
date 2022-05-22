@@ -137,17 +137,17 @@ MOVIEMON = [
             'x': 0,
             'y': 0
         },
-        'IMDB_title': {
-            0: "365 Days: This Day",
-            1: "The Gringo Papi",
-            2: "Время умирать",
-            3: "Respect the Jux",
-            4: "Пентаверат",
-            5: "Halo",
-            6: "Выпускной класс",
-            7: "Доктор Стрэндж: В мультивселенной безумия",
-            8: "Бэтмен",
-            9: "Bosch: Legacy",
+        'IMDB_title' : {
+            0 : "True Grit",
+            1 : "Sinbad: The Fifth Voyage",
+            2 : "Jaguar: Part 2",
+            3 : "Breathe Deeply",
+            4 : "Justice League",
+            5 : "Epic Movie",
+            6 : "Glitter",
+            7 : "Alfred the Great",
+            8 : "Back to school",
+            9 : "Disaster Movie",
         }
     }
 ]
