@@ -128,20 +128,20 @@ MOVIEMON = [
             'width': 10
         },
         'position': {
-            'x': 0,
-            'y': 0
+            'x': 5,
+            'y': 5,
         },
         'IMDB_title': {
-            0: "True Grit",
-            1: "Sinbad: The Fifth Voyage",
-            2: "Jaguar: Part 2",
-            3: "Breathe Deeply",
-            4: "Justice League",
-            5: "Epic Movie",
-            6: "Glitter",
-            7: "Alfred the Great",
-            8: "Back to school",
-            9: "Disaster Movie",
+            0: "365 Days: This Day",
+            1: "Gully",
+            2: "Big Gold Brick",
+            3: "Torn Hearts",
+            4: "Danger Force",
+            5: "Uncharted",
+            6: "The Bad Guys",
+            7: "Doctor Strange in the Multiverse of Madness",
+            8: "Ozark",
+            9: "Game of Thrones",
         }
     }
 ]
