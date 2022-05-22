@@ -96,7 +96,6 @@ def worldmap(request):
         'up_href': '/worldmap?move=up', 'up_title': 'Move up',
         'down_href': '/worldmap?move=down', 'down_title': 'Move down',
         'right_href': '/worldmap?move=right', 'right_title': 'Move right',
-
         'select_href': '/moviedex', 'start_href': '/options',
         'select_title': 'Moviedex', 'start_title': 'Options',
         'a_href': '', 'b_href': '/worldmap',
@@ -148,7 +147,7 @@ def battle(request, id):
         else:
             message = "You don't have movieballs"
 
-    params = {
+    context = {
         'left_href': '', 'up_href': '', 'down_href': '', 'right_href': '',
         'left_title': '', 'up_title': '', 'down_title': '', 'right_title': '',
         'select_href': '', 'start_href': '',
@@ -161,42 +160,30 @@ def battle(request, id):
         "battle_moviemon": battle_moviemon, "id": id, "chance": chance
     }
 
-    return render(request, "battle.html", params)
+    return render(request, "battle.html", context)
 
 
 def do_move_moviedex(movmn, move, selected):
     did_move = False
-    count = 0
-    dict_selected = {'selected': '', 'left': '', 'right': '', 'up': '',
-                     'down': ''}
-    if move == 'left':
-        did_move = True
-    if move == 'right':
-        did_move = True
-    if move == 'up':
-        did_move = True
-    if move == 'down':
+    dict_selected = {'selected': '', 'left': '', 'right': '', 'up': '', 'down': ''}
+    if move in ['left', 'right', 'up', 'down']:
         did_move = True
     if did_move:
-        for _ in movmn.moviedex:
-            count += 1
+        count = len(movmn.moviedex)
         if count >= 0:
             if selected in ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']:
                 dict_selected['selected'] = selected
-        if dict_selected['selected'] in ['0', '1', '2', '3', '4', '5', '6', '7',
-                                         '8', '9']:
+        if dict_selected['selected'] in ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']:
             if selected in ['5', '6', '7', '8', '9'] and move == 'up':
                 if count > (int(selected) - 5):
                     dict_selected['up'] = str(int(selected) - 5)
             elif selected in ['0', '1', '2', '3', '4'] and move == 'down':
                 if count > (int(selected) + 5):
                     dict_selected['down'] = str(int(selected) + 5)
-            elif selected in ['1', '2', '3', '4', '6', '7', '8',
-                              '9'] and move == 'left':
+            elif selected in ['1', '2', '3', '4', '6', '7', '8', '9'] and move == 'left':
                 if count > (int(selected) - 1):
                     dict_selected['left'] = str(int(selected) - 1)
-            elif selected in ['0', '1', '2', '3', '5', '6', '7',
-                              '8'] and move == 'right':
+            elif selected in ['0', '1', '2', '3', '5', '6', '7', '8'] and move == 'right':
                 if count > (int(selected) + 1):
                     dict_selected['right'] = str(int(selected) + 1)
             if not dict_selected['up']:
@@ -278,25 +265,25 @@ def options(request):
 
 def options_load_game(request):
     movmn = Moviemon()
-    listeFichiers = os.listdir("saved_files/")
-    listeGame = []
-    for fichiers in listeFichiers:
-        if fichiers != "session.txt":
-            listeGame.append(fichiers)
-    selectionne = request.GET.get('selectionne')
-    if selectionne != None:
-        for fichier in listeGame:
-            if selectionne in fichier:
-                game = movmn.load(fichier)
+    save_dir = os.listdir("saved_files/")
+    games_list = []
+    for file in save_dir:
+        if file != "session.txt":
+            games_list.append(file)
+    select_one = request.GET.get('select_one')
+    if select_one:
+        for file in games_list:
+            if select_one in file:
+                game = movmn.load(file)
                 game.save_tmp()
-            # return(redirect("/worldmap"))
+                return(redirect("/worldmap"))
     slota = False
     slotb = False
     slotc = False
     gameSplitA = 0
     gameSplitB = 0
     gameSplitC = 0
-    for game in listeGame:
+    for game in games_list:
         if "slota" in game:
             slota = True
             gameSplit = game.split("_")
@@ -319,18 +306,18 @@ def options_load_game(request):
 def options_save_game(request):
     movmn = Moviemon()
     tmp = movmn.dump()
-    listeFichiers = os.listdir("saved_files/")
-    listeGame = []
-    for fichiers in listeFichiers:
-        if fichiers != "session.txt":
-            listeGame.append(fichiers)
+    save_dir = os.listdir("saved_files/")
+    games_list = []
+    for file in save_dir:
+        if file != "session.txt":
+            games_list.append(file)
     slota = False
     slotb = False
     slotc = False
     gameSplitA = 0
     gameSplitB = 0
     gameSplitC = 0
-    for game in listeGame:
+    for game in games_list:
         if "slota" in game:
             slota = True
             gameSplit = game.split("_")
