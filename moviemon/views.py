@@ -246,7 +246,7 @@ def moviedex_detail(request, id):
 
 
 def options(request):
-    movmn = Moviemon()
+    movmn = Moviemon().dump()
     movmn.load_settings()
     movmn.save_tmp()
     controls_params = {
@@ -307,12 +307,9 @@ def options_save_game(request):
     for file in save_dir:
         if file != "session.txt":
             games_list.append(file)
-    slota = False
-    slotb = False
-    slotc = False
-    gameSplitA = 0
-    gameSplitB = 0
-    gameSplitC = 0
+    slota = slotb = slotc = False
+    gameSplitA = gameSplitB = gameSplitC = 0
+
     for game in games_list:
         if "slota" in game:
             slota = True
@@ -326,6 +323,7 @@ def options_save_game(request):
             slotc = True
             gameSplit = game.split("_")
             gameSplitC = gameSplit[1]
+
     slot_name = request.GET.get('slot')
     len_moviedex = len(tmp.moviedex)
     if slot_name:
@@ -334,10 +332,10 @@ def options_save_game(request):
         if "slota" in file_name:
             os.system("rm -f saved_files/slota*")
             tmp.save(file_name=file_name)
-        if "slotb" in file_name:
+        elif "slotb" in file_name:
             os.system("rm -f saved_files/slotb*")
             tmp.save(file_name=file_name)
-        if "slotc" in file_name:
+        elif "slotc" in file_name:
             os.system("rm -f saved_files/slotc*")
             tmp.save(file_name=file_name)
     tmp.dump()
