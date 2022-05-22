@@ -14,13 +14,13 @@ Battle
     <div id="ecran">
 
 		<div >Battle</div>
-        {% if moviemonABattre.title %}
+        {% if battle_moviemon.title %}
         <div class="info_battle">
             <div>Try to capture the Moviemon you've been hunting down!</div>
-            <div>Moviemon : {{moviemonABattre.title}} -- Strength : {{moviemonABattre.rating}} -- Probability of taking damage : {{chance}}%</div>
+            <div>Moviemon : {{battle_moviemon.title}} -- Strength : {{battle_moviemon.rating}} -- Probability of taking damage : {{chance}}%</div>
         </div> <!-- info battle-->
 
-        <div ><img id="affiche" src={{moviemonABattre.poster}} alt="moviemon" ></div>
+        <div ><img id="affiche" src={{battle_moviemon.poster}} alt="moviemon" ></div>
 
         <div class="info_battle">
             <div>Player : strength {{strange}}, quantity of movieBalls in stock: {{nombreMovieballs}}</div>

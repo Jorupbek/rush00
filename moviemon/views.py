@@ -122,44 +122,28 @@ def worldmap(request):
 def battle(request, id):
     movmn = Moviemon()
     game = movmn.dump()
-    moviemonABattre = game.get_movie(id)
-    moviemonballTry = request.GET.get('movieball')
+    battle_moviemon = game.get_movie(id)
+    movieball_try = request.GET.get('movieball')
     message = ""
-    chance = 0
 
-    try:
-        strange = game.get_strength()
-        forceMonstre = float(moviemonABattre['rating']) * 10
-        chance = 50 - int(forceMonstre) + strange * 5
-        if chance < 1:
-            chance = 1
-        if chance > 90:
-            chance = 90
-    except Exception as e:
-        print(e)
+    strange = game.get_strength()
+    strange_monstr = float(battle_moviemon['rating']) * 10
+    chance = 50 - int(strange_monstr) + strange * 5
+    if chance < 1:
+        chance = 1
+    if chance > 90:
+        chance = 90
 
-    if moviemonballTry:
-        if game.movieballs > 0 and moviemonABattre:
-            game.movieballs = game.movieballs - 1
-            rat = moviemonABattre['rating']
-            forceMonstre = float(rat) if rat != 'N/A' else 1 * 10
-            chance = 50 - int(forceMonstre) + strange * 5
-            randomNumber = random.randint(1, 100)
-            moviemonListAvecDetailClean = []
-            if chance >= randomNumber or moviemonballTry == 'cheat':
-                game.moviedex.append(moviemonABattre)
-                for moviemon in game.movies_detail:
-                    if moviemon['title'] != moviemonABattre['title']:
-                        moviemonListAvecDetailClean.append(moviemon)
-                game.movies_detail = moviemonListAvecDetailClean
-                game.save_tmp()
+    if movieball_try:
+        if game.movieballs > 0 and battle_moviemon:
+            game.movieballs -= 1
+            random_n = random.randint(1, 90)
+            if chance >= random_n or movieball_try == 'cheat':
+                game.moviedex.append(battle_moviemon)
+                game.movies_detail.remove(battle_moviemon)
                 message = "You catched moviemon!"
-                moviemonballTry = False
             else:
-                if (game.movieballs > 0):
-                    message = "Try your luck again!"
-                else:
-                    message = "You don't have movieballs"
+                message = "Try your luck again!"
             game.save_tmp()
         else:
             message = "You don't have movieballs"
@@ -174,7 +158,7 @@ def battle(request, id):
         'a_title': '', 'b_title': 'Return to World Map',
         "message": message, "strange": strange,
         "movieballs": game.movieballs,
-        "moviemonABattre": moviemonABattre, "id": id, "chance": chance
+        "battle_moviemon": battle_moviemon, "id": id, "chance": chance
     }
 
     return render(request, "battle.html", params)
