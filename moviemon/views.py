@@ -65,16 +65,17 @@ def do_move(movmn, move):
 def random_move_event(movmn):
     from random import randint
     rand = randint(0, 2)
-    found_moviemon = ''
+    found_moviemon = name_rating = ''
     if rand == 1:
         movmn.movieballs += 1
     elif rand == 2:
         if len(movmn.movies_detail) > 0:
             m = movmn.get_random_movie(movmn.movies_detail)
             found_moviemon = m['id']
+            name_rating = m['title'] + ' ' + m['rating']
         else:
             rand = 0
-    return rand, found_moviemon
+    return rand, found_moviemon, name_rating
 
 
 def worldmap(request):
@@ -83,7 +84,7 @@ def worldmap(request):
     movmn = Moviemon()
     movmn = movmn.dump()
     if do_move(movmn, move):
-        movmn.found, movmn.found_moviemon = random_move_event(movmn)
+        movmn.found, movmn.found_moviemon, movmn.name_rating = random_move_event(movmn)
         movmn.save_tmp()
         return redirect("/worldmap")
 
@@ -112,6 +113,7 @@ def worldmap(request):
         'grid': make_grid(width, height, position),
         'found': movmn.found,
         'found_moviemon': movmn.found_moviemon,
+        'name_rating': movmn.name_rating,
         'movieballs': movmn.movieballs
     }
 
