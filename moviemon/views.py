@@ -298,8 +298,8 @@ def options_load_game(request):
             gameSplitC = gameSplit[1]
     return render(request, "options_load_game.html",
                   {"slota": slota, "slotb": slotb, "slotc": slotc,
-                   "slotaNiveau": gameSplitA, "slotbNiveau": gameSplitB,
-                   "slotcNiveau": gameSplitC, "b_href": "/", "b_title": "menu",
+                   "slot_a": gameSplitA, "slot_b": gameSplitB,
+                   "slot_c": gameSplitC, "b_href": "/", "b_title": "menu",
                    "a_href": "/worldmap/", "a_title": "load"})
 
 
@@ -330,24 +330,23 @@ def options_save_game(request):
             slotc = True
             gameSplit = game.split("_")
             gameSplitC = gameSplit[1]
-    nomSlot = request.GET.get('slot')
-    NiveauMax = 10
-    NiveauActuel = len(tmp.moviedex)
-    if nomSlot:
-        saveName = "slot" + nomSlot.lower() + "_" + str(
-            NiveauActuel) + "_10.mmg"
-        if "slota" in saveName:
-            commandeEffacer = os.system("rm -f saved_files/slota*")
-            tmp.save(fileName=saveName)
-        if "slotb" in saveName:
-            commandeEffacer = os.system("rm -f saved_files/slotb*")
-            tmp.save(fileName=saveName)
-        if "slotc" in saveName:
-            commandeEffacer = os.system("rm -f saved_files/slotc*")
-            tmp.save(fileName=saveName)
+    slot_name = request.GET.get('slot')
+    len_moviedex = len(tmp.moviedex)
+    if slot_name:
+        file_name = "slot" + slot_name.lower() + "_" + str(
+            len_moviedex) + "_10.mmg"
+        if "slota" in file_name:
+            os.system("rm -f saved_files/slota*")
+            tmp.save(file_name=file_name)
+        if "slotb" in file_name:
+            os.system("rm -f saved_files/slotb*")
+            tmp.save(file_name=file_name)
+        if "slotc" in file_name:
+            os.system("rm -f saved_files/slotc*")
+            tmp.save(file_name=file_name)
     tmp.dump()
     return render(request, "options_save_game.html",
                   {"slota": slota, "slotb": slotb, "slotc": slotc,
-                   "slotaNiveau": gameSplitA, "slotbNiveau": gameSplitB,
-                   "slotcNiveau": gameSplitC, "b_href": "/options/",
-                   "b_title": "retour"})
+                   "slot_a": gameSplitA, "slot_b": gameSplitB,
+                   "slot_c": gameSplitC, "b_href": "/options/",
+                   "b_title": "return"})
