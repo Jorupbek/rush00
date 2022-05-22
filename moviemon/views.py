@@ -232,6 +232,7 @@ def moviedex(request):
 
 def moviedex_detail(request, id):
     game = Moviemon().dump()
+    print(game.moviedex)
     controls_params = {
         'left_href': '', 'up_href': '', 'down_href': '', 'right_href': '',
         'left_title': '', 'up_title': '', 'down_title': '', 'right_title': '',
@@ -301,7 +302,7 @@ def options_load_game(request):
 
 def options_save_game(request):
     tmp = Moviemon().dump()
-    save_dir = os.listdir("saved_files/")
+    save_dir = os.listdir(tmp.save_dir)
     games_list = []
     for file in save_dir:
         if file != "session.txt":
