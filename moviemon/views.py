@@ -20,7 +20,6 @@ class HomePageView(TemplateView):
         context['b_href'] = '/options/load_game'
         context['a_title'] = 'New game'
         context['b_title'] = 'Load existing game'
-
         return context
 
 
@@ -137,7 +136,7 @@ def battle(request, id):
         if game.movieballs > 0 and battle_moviemon:
             game.movieballs -= 1
             random_n = random.randint(1, 90)
-            if chance >= random_n or movieball_try == 'cheat':
+            if chance >= random_n:
                 game.moviedex.append(battle_moviemon)
                 game.movies_detail.remove(battle_moviemon)
                 message = "You catched moviemon!"
@@ -171,19 +170,19 @@ def do_move_moviedex(movmn, move, selected):
     if did_move:
         count = len(movmn.moviedex)
         if count >= 0:
-            if selected in ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']:
+            if selected in range(10):
                 dict_selected['selected'] = selected
-        if dict_selected['selected'] in ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']:
-            if selected in ['5', '6', '7', '8', '9'] and move == 'up':
+        if dict_selected['selected'] in range(10):
+            if selected in range(5, 10) and move == 'up':
                 if count > (int(selected) - 5):
                     dict_selected['up'] = str(int(selected) - 5)
-            elif selected in ['0', '1', '2', '3', '4'] and move == 'down':
+            elif selected in range(5) and move == 'down':
                 if count > (int(selected) + 5):
                     dict_selected['down'] = str(int(selected) + 5)
-            elif selected in ['1', '2', '3', '4', '6', '7', '8', '9'] and move == 'left':
+            elif selected in range(1, 10) and move == 'left':
                 if count > (int(selected) - 1):
                     dict_selected['left'] = str(int(selected) - 1)
-            elif selected in ['0', '1', '2', '3', '5', '6', '7', '8'] and move == 'right':
+            elif selected in range(9) and move == 'right':
                 if count > (int(selected) + 1):
                     dict_selected['right'] = str(int(selected) + 1)
             if not dict_selected['up']:
@@ -232,8 +231,7 @@ def moviedex(request):
 
 
 def moviedex_detail(request, id):
-    movmn = Moviemon()
-    game = movmn.dump()
+    game = Moviemon().dump()
     controls_params = {
         'left_href': '', 'up_href': '', 'down_href': '', 'right_href': '',
         'left_title': '', 'up_title': '', 'down_title': '', 'right_title': '',
@@ -302,8 +300,7 @@ def options_load_game(request):
 
 
 def options_save_game(request):
-    movmn = Moviemon()
-    tmp = movmn.dump()
+    tmp = Moviemon().dump()
     save_dir = os.listdir("saved_files/")
     games_list = []
     for file in save_dir:
