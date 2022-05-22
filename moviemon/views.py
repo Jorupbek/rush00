@@ -241,6 +241,7 @@ def moviedex_detail(request, id):
         'a_title': '', 'b_title': 'Moviedex',
         "moviemonDetail": game.moviedex[int(id)]
     }
+    print(game.moviedex[int(id)])
     return render(request, "moviedex_detail.html", controls_params)
 
 
