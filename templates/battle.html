@@ -1,55 +1,60 @@
 {% extends "base.html" %}
 
 {% block title %}
-Battle
+    Battle
 {% endblock %}
 
 {% block style %}
-{% load static %}
-<!-- <link rel="stylesheet" type="text/css" href="{% static 'ex01/style2.css' %}" /> -->
+    {% load static %}
+    <!-- <link rel="stylesheet" type="text/css" href="{% static 'ex01/style2.css' %}" /> -->
 {% endblock %}
 
 {% block content %}
-<div id="console">
-    <div id="ecran">
+    <div id="console">
+        <div id="ecran">
 
-		<div >Battle</div>
-        {% if battle_moviemon.title %}
-        <div class="info_battle">
-            <div>Try to capture the Moviemon you've been hunting down!</div>
-            <div>Moviemon : {{battle_moviemon.title}} -- Strength : {{battle_moviemon.rating}} -- Probability of taking damage : {{chance}}%</div>
-        </div> <!-- info battle-->
+            <div>Battle</div>
+            {% if battle_moviemon.title %}
+                <div class="info_battle">
+                    <div>Try to capture the Moviemon you've been hunting down!</div>
+                    <div>Moviemon : {{ battle_moviemon.title }} -- Strength : {{ battle_moviemon.rating }} --
+                        Probability of taking damage : {{ chance }}%
+                    </div>
+                </div> <!-- info battle-->
 
-        <div ><img id="affiche" src={{battle_moviemon.poster}} alt="moviemon" ></div>
+                <div><img id="affiche" src={{ battle_moviemon.poster }} alt="moviemon"></div>
 
-        <div class="info_battle">
-            <div>Player : strength {{strange}}, quantity of movieBalls in stock: {{movieballs}}</div>
-            {% if message == "You catched moviemon!"%}
-                <div style="color : blue">{{ message }}</div>
-                <div> <a title="TryCatch">A: Attack the enemy</a></div>
+                <div class="info_battle">
+                    <div>Player : strength {{ strange }}, quantity of movieBalls in stock: {{ movieballs }}</div>
+                    {% if message == "You catched moviemon!" %}
+                        <div style="color : blue">{{ message }}</div>
+                        <div><a title="TryCatch">A: Attack the enemy</a></div>
+                    {% endif %}
+                    {% if message == "Try your luck again!" %}
+                        <div style="color : green">{{ message }}</div>
+                        <div> A: Attack the enemy</div>
+                    {% endif %}
+                    {% if message == "You don't have movieballs" %}
+                        <div style="color : red">{{ message }}</div>
+                    {% endif %}
+                    {% if message == "" %}
+                        <div> A: Attack the enemy</div>
+                    {% endif %}
+                    <div>B: Back to the World Map</div>
+                </div> <!-- info battle-->
+            {% else %}
+                <img src="{% static 'congratulations.gif' %}" alt="gif">
+                <div>Congratulations!!!</div>
+                <div>You have won a movie.</div>
+                <div>B: Back to the World Map</div>
             {% endif %}
-            {% if message == "Try your luck again!"%}
-                <div style="color : green">{{ message }}</div>
-                <div> A: Attack the enemy </div>
-            {% endif %}
-            {% if message == "You don't have movieballs"%}
-                <div style="color : red">{{ message }}</div>
-            {% endif %}
-            {% if message == ""%}
-            <div> A: Attack the enemy </div>
-            {% endif %}
-            <div>B: Back to the World Map </div>
-        </div> <!-- info battle-->
-        {% else %}
-        <div>B: Back to the World Map</div>
-        {% endif %}
 
-    </div> <!-- ecran -->
+        </div> <!-- ecran -->
 
-  {% include "controles.html" %}
-</div>
+        {% include "controles.html" %}
+    </div>
 
-</div> <!-- console-->
+    </div> <!-- console-->
 
 
 {% endblock %}
