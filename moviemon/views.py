@@ -229,6 +229,7 @@ def moviedex_detail(request, id):
         'a_title': '', 'b_title': 'Moviedex',
         "moviemonDetail": game.moviedex[int(id)]
     }
+    print(game.moviedex[int(id)])
     return render(request, "moviedex_detail.html", controls_params)
 
 
@@ -254,19 +255,19 @@ def options_load_game(request):
     for file in save_dir:
         if file != "session.txt":
             games_list.append(file)
+
     select_one = request.GET.get('select_one')
     if select_one:
         for file in games_list:
             if select_one in file:
                 game = movmn.load(file)
                 game.save_tmp()
-                return(redirect("/worldmap"))
-    slota = False
-    slotb = False
-    slotc = False
-    gameSplitA = 0
-    gameSplitB = 0
-    gameSplitC = 0
+
+                return redirect("/worldmap")
+
+    slota = slotb = slotc = False
+    gameSplitA = gameSplitB = gameSplitC = 0
+
     for game in games_list:
         if "slota" in game:
             slota = True
@@ -280,6 +281,7 @@ def options_load_game(request):
             slotc = True
             gameSplit = game.split("_")
             gameSplitC = gameSplit[1]
+
     return render(request, "options_load_game.html",
                   {"slota": slota, "slotb": slotb, "slotc": slotc,
                    "slot_a": gameSplitA, "slot_b": gameSplitB,
