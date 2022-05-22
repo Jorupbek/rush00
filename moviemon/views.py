@@ -169,16 +169,12 @@ def do_move_moviedex(movmn, move, selected):
         did_move = True
     if did_move:
         count = len(movmn.moviedex)
-        if selected in range(10):
+        if int(selected) in range(10):
             dict_selected['selected'] = selected
-            if move == 'left' and selected == '0':
-                dict_selected['left'] = str(count - 1)
-            elif move == 'right' and selected == str(count - 1):
-                dict_selected['right'] = '0'
-            if not dict_selected['up']:
-                dict_selected['up'] = selected
-            if not dict_selected['down']:
-                dict_selected['down'] = selected
+            if move == 'left':
+                dict_selected['left'] = str(count - 1) if selected == '0' else str(int(selected) - 1)
+            elif move == 'right':
+                dict_selected['right'] = '0' if selected == str(count - 1) else str(int(selected) + 1)
             if not dict_selected['left']:
                 dict_selected['left'] = selected
             if not dict_selected['right']:
