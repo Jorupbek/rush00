@@ -164,27 +164,17 @@ def battle(request, id):
 
 def do_move_moviedex(movmn, move, selected):
     did_move = False
-    dict_selected = {'selected': '', 'left': '', 'right': '', 'up': '', 'down': ''}
-    if move in ['left', 'right', 'up', 'down']:
+    dict_selected = {'selected': '', 'left': '', 'right': ''}
+    if move in ['left', 'right']:
         did_move = True
     if did_move:
         count = len(movmn.moviedex)
-        if count >= 0:
-            if selected in range(10):
-                dict_selected['selected'] = selected
-        if dict_selected['selected'] in range(10):
-            if selected in range(5, 10) and move == 'up':
-                if count > (int(selected) - 5):
-                    dict_selected['up'] = str(int(selected) - 5)
-            elif selected in range(5) and move == 'down':
-                if count > (int(selected) + 5):
-                    dict_selected['down'] = str(int(selected) + 5)
-            elif selected in range(1, 10) and move == 'left':
-                if count > (int(selected) - 1):
-                    dict_selected['left'] = str(int(selected) - 1)
-            elif selected in range(9) and move == 'right':
-                if count > (int(selected) + 1):
-                    dict_selected['right'] = str(int(selected) + 1)
+        if selected in range(10):
+            dict_selected['selected'] = selected
+            if move == 'left' and selected == '0':
+                dict_selected['left'] = str(count - 1)
+            elif move == 'right' and selected == str(count - 1):
+                dict_selected['right'] = '0'
             if not dict_selected['up']:
                 dict_selected['up'] = selected
             if not dict_selected['down']:
@@ -215,11 +205,8 @@ def moviedex(request):
         a_href = '0'
     controls_params = {
         'left_href': '/moviedex?move=left&selected=' + dict_selected['left'],
-        'up_href': '/moviedex?move=up&selected=' + dict_selected['up'],
-        'down_href': '/moviedex?move=down&selected=' + dict_selected['down'],
         'right_href': '/moviedex?move=right&selected=' + dict_selected['right'],
-        'left_title': 'Move left', 'up_title': 'Move up',
-        'down_title': 'Move down', 'right_title': 'Move right',
+        'left_title': 'Move left', 'right_title': 'Move right',
         'select_href': '/worldmap', 'start_href': '',
         'select_title': 'World Map', 'start_title': '',
         'a_href': '/moviedex/' + a_href, 'b_href': '',
