@@ -14,6 +14,7 @@ class Moviemon:
         self.movieballs = 3
         self.found = 0
         self.found_moviemon = ''
+        self.name_rating = ''
         self.moviedex = []
 
     def load(self, file_name):
