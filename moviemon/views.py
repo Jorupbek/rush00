@@ -65,25 +65,25 @@ def do_move(movmn, move):
 def random_move_event(movmn):
     from random import randint
     rand = randint(0, 2)
-    found_moviemon = ''
+    found_moviemon = name_rating = ''
     if rand == 1:
         movmn.movieballs += 1
     elif rand == 2:
         if len(movmn.movies_detail) > 0:
             m = movmn.get_random_movie(movmn.movies_detail)
             found_moviemon = m['id']
+            name_rating = m['title'] + ' ' + m['rating']
         else:
             rand = 0
-    return rand, found_moviemon
+    return rand, found_moviemon, name_rating
 
 
 def worldmap(request):
     move = request.GET.get('move', '')
     old_id = request.GET.get('id', '')
-    movmn = Moviemon()
-    movmn = movmn.dump()
+    movmn = Moviemon().dump()
     if do_move(movmn, move):
-        movmn.found, movmn.found_moviemon = random_move_event(movmn)
+        movmn.found, movmn.found_moviemon, movmn.name_rating = random_move_event(movmn)
         movmn.save_tmp()
         return redirect("/worldmap")
 
@@ -112,6 +112,7 @@ def worldmap(request):
         'grid': make_grid(width, height, position),
         'found': movmn.found,
         'found_moviemon': movmn.found_moviemon,
+        'name_rating': movmn.name_rating,
         'movieballs': movmn.movieballs
     }
 
@@ -119,8 +120,7 @@ def worldmap(request):
 
 
 def battle(request, id):
-    movmn = Moviemon()
-    game = movmn.dump()
+    game = Moviemon().dump()
     battle_moviemon = game.get_movie(id)
     movieball_try = request.GET.get('movieball')
     message = ""
@@ -200,8 +200,7 @@ def do_move_moviedex(movmn, move, selected):
 def moviedex(request):
     selected = request.GET.get('selected', '')
     move = request.GET.get('move', '')
-    movmn = Moviemon()
-    movmn = movmn.dump()
+    movmn = Moviemon().dump()
     moviedex = movmn.moviedex
     count = 0
     if not selected:
@@ -232,10 +231,9 @@ def moviedex(request):
     return render(request, "moviedex.html", controls_params)
 
 
-def moviedexDetail(request, id):
+def moviedex_detail(request, id):
     movmn = Moviemon()
     game = movmn.dump()
-    moviedex = game.moviedex
     controls_params = {
         'left_href': '', 'up_href': '', 'down_href': '', 'right_href': '',
         'left_title': '', 'up_title': '', 'down_title': '', 'right_title': '',
@@ -243,7 +241,7 @@ def moviedexDetail(request, id):
         'select_title': '', 'start_title': '',
         'a_href': '', 'b_href': '/moviedex',
         'a_title': '', 'b_title': 'Moviedex',
-        "moviemonDetail": moviedex[int(id)]
+        "moviemonDetail": game.moviedex[int(id)]
     }
     return render(request, "moviedex_detail.html", controls_params)
 
