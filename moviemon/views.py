@@ -80,8 +80,7 @@ def random_move_event(movmn):
 def worldmap(request):
     move = request.GET.get('move', '')
     old_id = request.GET.get('id', '')
-    movmn = Moviemon()
-    movmn = movmn.dump()
+    movmn = Moviemon().dump()
     if do_move(movmn, move):
         movmn.found, movmn.found_moviemon = random_move_event(movmn)
         movmn.save_tmp()
@@ -119,8 +118,7 @@ def worldmap(request):
 
 
 def battle(request, id):
-    movmn = Moviemon()
-    game = movmn.dump()
+    game = Moviemon().dump()
     battle_moviemon = game.get_movie(id)
     movieball_try = request.GET.get('movieball')
     message = ""
@@ -200,8 +198,7 @@ def do_move_moviedex(movmn, move, selected):
 def moviedex(request):
     selected = request.GET.get('selected', '')
     move = request.GET.get('move', '')
-    movmn = Moviemon()
-    movmn = movmn.dump()
+    movmn = Moviemon().dump()
     moviedex = movmn.moviedex
     count = 0
     if not selected:
@@ -232,10 +229,9 @@ def moviedex(request):
     return render(request, "moviedex.html", controls_params)
 
 
-def moviedexDetail(request, id):
+def moviedex_detail(request, id):
     movmn = Moviemon()
     game = movmn.dump()
-    moviedex = game.moviedex
     controls_params = {
         'left_href': '', 'up_href': '', 'down_href': '', 'right_href': '',
         'left_title': '', 'up_title': '', 'down_title': '', 'right_title': '',
@@ -243,7 +239,7 @@ def moviedexDetail(request, id):
         'select_title': '', 'start_title': '',
         'a_href': '', 'b_href': '/moviedex',
         'a_title': '', 'b_title': 'Moviedex',
-        "moviemonDetail": moviedex[int(id)]
+        "moviemonDetail": game.moviedex[int(id)]
     }
     return render(request, "moviedex_detail.html", controls_params)
 
