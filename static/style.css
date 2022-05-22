@@ -3,6 +3,7 @@ body {
     text-align: center;
     font-size: 4vw;
     font-family: fantasy;
+    background-color: #c4e2f7;
 }
 div{
  padding :0.5vw;
@@ -22,9 +23,6 @@ div{
 }
 #info {
     font-size: 2vw;
-    position: absolute;
-    right: 0%;
-    top: 10%;
 }
 
 
@@ -155,6 +153,7 @@ a:link {
 .b-but {
     background-color: #f93c3c;
     border: 1px solid #f93c3c;
+    margin-bottom: 10px;
 }
 
 .mario {
@@ -166,4 +165,10 @@ a:link {
     width: 36px;
     height: 36px;
     padding: 0 2px;
+}
+
+.buttons-ab {
+    flex-direction: column;
+    display: flex;
+    align-items: center;
 }

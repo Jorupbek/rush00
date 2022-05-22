@@ -1,30 +1,27 @@
 {% extends "base.html" %}
 
 {% block title %}
-Moviemon - Welcome!
+    Moviemon - Welcome!
 {% endblock %}
 
 {% block style %}
-{% load static %}
-<!-- <link rel="stylesheet" type="text/css" href="{% static 'ex01/style2.css' %}" /> -->
+    {% load static %}
 {% endblock %}
 
 {% block content %}
 
-<div id="console">
-    <div id="ecran">
-        <div id="welcome_message">
-            <div id="game_name">Moviemon</div>
-            <div>&nbsp;</div>
-            <div>&nbsp;</div>
-            <div>&nbsp;</div>
-	    </div> <!-- welcome message-->
-        <div id="info">
-            <div>A - New Game</div>
-            <div>B - Load</div>
-        </div>  <!-- info-->
-    </div> <!-- ecran-->
-	{% include "controles.html" %}
-</div> <!-- console-->
+    <div id="console">
+        <div id="ecran">
+            <div id="welcome_message">
+                <div id="game_name">Moviemon</div>
+                <div>&nbsp;</div>
+                <div id="info">
+                    <div>A - New Game</div>
+                    <div>B - Load</div>
+                </div>  <!-- info-->
+            </div> <!-- welcome message-->
+        </div> <!-- ecran-->
+        {% include "controles.html" %}
+    </div> <!-- console-->
 
 {% endblock %}
